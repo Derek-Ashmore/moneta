@@ -3,4 +3,8 @@
   <groupId>moneta</groupId>
   <artifactId>moneta</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>moneta-core</module>
+  </modules>
 </project>
