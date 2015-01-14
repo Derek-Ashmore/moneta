@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<document>
+  <properties>
+    <title>Who we are</title>
+  </properties>
+  <body>
+
+      <section name="Derek C. Ashmore">
+		<p><a href="mailto:derek.ashmore@dvtconsulting.com?subject=Regarding Transform4J&#160;">Derek C. Ashmore</a> is the author of the <a href="http://dvtpress.com/java-ee-architects-handbook-second-edition.html">Java EE Architect's Handbook, Second Edition</a>.  He is widely published with most recent publications including articles in JavaPro and the Java Developers Journal.  Derek routinely publishes in his blog, which is <a href="http://www.derekashmore.com">here</a>.</p>
+		<p> Derek is the managing consultant and CTO for <a href="http://www.dvtconsulting.com">Delta Vortex Technologies</a>.  He routinely provides consulting services for companies designing and developing commercial web applications.  Derek can be reached at <a href="mailto:derek.ashmore@dvtconsulting.com?subject=Regarding Transform4J&#160;">derek.ashmore@dvtconsulting.com</a>.</p>
+	  </section>
+	  
+  </body>
+</document>

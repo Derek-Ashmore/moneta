@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+	
+http://www.apache.org/licenses/LICENSE-2.0
+	
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="Moneta">
+ 
+	<bannerRight>
+		<name>Moneta</name>
+		<src>/images/blank.png</src>
+		<href>/index.html</href>
+	</bannerRight>
+ 
+ 
+	<body>
+		<menu name="Moneta">
+			<item name="Overview"        			href="/index.html"/>
+			<item name="Download"       			href="/download.html"/>
+			<item name="License"         			href="/license.html"/>
+			<item name="Release History" 			href="/releaseHistory.html"/>
+			<item name="Who we are" 				href="/developers.html"/>
+			<item name="Javadoc (Latest snapshot)" 	href="/doc/javadoc/index.html"/>
+		</menu>
+		
+		<menu name="User Documentation">
+			<item name="Getting Started"   			href="/userguide/gettingStarted.html"/>
+		</menu>
+
+		<menu name="Development">
+			<item name="Issue Tracking"       		href="/issue-tracking.html"/>
+			<item name="Source Repository"    		href="/source-repository.html"/>
+			<item name="Test Coverage"        		href="/doc/coverage/index.html"/>
+		</menu>
+
+	</body>
+	
+</project>
