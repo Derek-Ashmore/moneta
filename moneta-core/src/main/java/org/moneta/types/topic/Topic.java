@@ -11,34 +11,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.types.topic;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.moneta.types.BaseType;
 
 /**
- * Base value object type
+ * Represents an information topic.
  * @author D. Ashmore
  *
  */
-public abstract class BaseType {
-
-	private static final boolean TEST_TRANSIENTS = false;
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, TEST_TRANSIENTS);
+public class Topic extends BaseType {
+	
+	private String topicName;
+	private String tableName;
+	
+	public String getTopicName() {
+		return topicName;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, TEST_TRANSIENTS);
+	
+	public void setTopicName(String topicName) {
+		this.topicName = topicName;
 	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+	
+	public String getTableName() {
+		return tableName;
+	}
+	
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 }

@@ -11,34 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
-
 /**
- * Combines individual search criteria with logical oeprators.
  * @author D. Ashmore
  *
  */
-public class CompositeCriteria extends BaseType implements Criteria {
-	
-	public static enum Operator {AND, OR, XOR};
-	
-	private Operator operator;
-	private Criteria[] searchCriteria;
-	
-	public Operator getOperator() {
-		return operator;
-	}
-	
-	public void setOperator(Operator operator) {
-		this.operator = operator;
-	}
-	
-	public Criteria[] getSearchCriteria() {
-		return searchCriteria;
-	}
-	
-	public void setSearchCriteria(Criteria[] searchCriteria) {
-		this.searchCriteria = searchCriteria;
-	}
-
-}
+package org.moneta.types.search;

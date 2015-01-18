@@ -14,9 +14,9 @@
 package org.moneta;
 
 import org.moneta.types.Record;
-import org.moneta.types.SearchRequest;
-import org.moneta.types.SearchResult;
 import org.moneta.types.Value;
+import org.moneta.types.search.SearchRequest;
+import org.moneta.types.search.SearchResult;
 
 /**
  * Base Moneta class providing search and store capability.

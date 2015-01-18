@@ -11,34 +11,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.types.search;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.moneta.types.BaseType;
 
 /**
- * Base value object type
+ * Combines individual search criteria with logical oeprators.
  * @author D. Ashmore
  *
  */
-public abstract class BaseType {
-
-	private static final boolean TEST_TRANSIENTS = false;
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, TEST_TRANSIENTS);
+public class CompositeCriteria extends BaseType implements Criteria {
+	
+	public static enum Operator {AND, OR, XOR};
+	
+	private Operator operator;
+	private Criteria[] searchCriteria;
+	
+	public Operator getOperator() {
+		return operator;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj, TEST_TRANSIENTS);
+	
+	public void setOperator(Operator operator) {
+		this.operator = operator;
 	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+	
+	public Criteria[] getSearchCriteria() {
+		return searchCriteria;
+	}
+	
+	public void setSearchCriteria(Criteria[] searchCriteria) {
+		this.searchCriteria = searchCriteria;
 	}
 
 }

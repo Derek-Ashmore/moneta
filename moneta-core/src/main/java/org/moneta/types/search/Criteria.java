@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.types.search;
 
 /**
  * Marker interface that designates known topic search criteria.

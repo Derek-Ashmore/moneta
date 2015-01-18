@@ -16,6 +16,11 @@ package org.moneta.types;
 import org.junit.Before;
 import org.junit.Test;
 import org.moneta.BeanTester;
+import org.moneta.types.search.CompositeCriteria;
+import org.moneta.types.search.SearchCriteria;
+import org.moneta.types.search.SearchRequest;
+import org.moneta.types.search.SearchResult;
+import org.moneta.types.topic.Topic;
 
 public class MonetaTypeTest {
 	
@@ -34,6 +39,9 @@ public class MonetaTypeTest {
 		beanTester.testBean(SearchRequest.class);
 		beanTester.testBean(SearchResult.class);
 		beanTester.testBean(Value.class);
+		
+		// topic package tests
+		beanTester.testBean(Topic.class);
 	}
 
 }

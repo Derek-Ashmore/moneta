@@ -11,7 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.types.search;
+
+import org.moneta.types.BaseType;
+import org.moneta.types.Record;
 
 /**
  * Contains the results of a topic search;
