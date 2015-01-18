@@ -81,6 +81,43 @@ public class ConnectionPoolFactoryTest {
 	}
 	
 	@Test
+	public void testBasicExceptionPath() throws Exception {
+		
+		dataSource.getConnectionPoolProperties().put("fu", "bar");
+		testCreateException("Invalid connection pool properties detected");
+		dataSource.getConnectionPoolProperties().remove("fu");
+		
+		Throwable exceptionThrown = null;
+		try {ConnectionPoolFactory.createConnectionPool(null);}
+		catch (Exception e) {
+			exceptionThrown = e;
+		}		
+		Assert.assertTrue(exceptionThrown != null);
+		Assert.assertTrue(exceptionThrown.getMessage().contains("not allowed"));
+		
+		dataSource.setDataSourceName(null);
+		testCreateException("not allowed");
+		
+		dataSource.setDataSourceName("foo");
+		dataSource.setConnectionUrl(null);
+		testCreateException("not allowed");
+		
+		dataSource.setConnectionUrl("foo");
+		dataSource.setDriver(null);
+		testCreateException("not allowed");
+	}
+
+	private void testCreateException(String testMessage) {
+		Throwable exceptionThrown = null;
+		try {ConnectionPoolFactory.createConnectionPool(dataSource);}
+		catch (Exception e) {
+			exceptionThrown = e;
+		}		
+		Assert.assertTrue(exceptionThrown != null);
+		Assert.assertTrue(exceptionThrown.getMessage().contains(testMessage));
+	}
+	
+	@Test
 	public void testAssignProperty() throws Exception {
 		PropertyDescriptor pDesc;
 		pDesc = ConnectionPoolFactory.assignProperty("foo", dataSource, "dataSourceName", "foo");
