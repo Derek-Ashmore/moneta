@@ -36,7 +36,9 @@ public class MonetaSearchDAO extends BaseDAO {
 				.generateSelect(searchTopic, 
 						request.getSearchCriteria(), 
 						request.getFieldNames());
-		SqlSelectExecutor sExec = new SqlSelectExecutor(request.getTopic(), selectText);		
+		SqlSelectExecutor sExec = new SqlSelectExecutor(request.getTopic(), selectText);
+		sExec.setMaxRows(request.getMaxRows());
+		sExec.setStartRow(request.getStartRow());
 		return sExec.call();
 	}
 }

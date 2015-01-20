@@ -15,19 +15,41 @@ package org.moneta.dao;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.moneta.HSqlTest;
+import org.moneta.HSqlTestBase;
 import org.moneta.types.Record;
 
-public class RecordResultSetHandlerTest extends HSqlTest {
+public class RecordResultSetHandlerTest extends HSqlTestBase {
+	
+	RecordResultSetHandler handler;
+	
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		handler = new RecordResultSetHandler();
+	}
 	
 	@Test
 	public void testBasicHappyPath() throws Exception {
 		QueryRunner runner = new QueryRunner();
 		Record[] recArray = runner.query(nativeConnection, 
-				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", new RecordResultSetHandler());
+				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", handler);
 		Assert.assertTrue(recArray != null);
 		Assert.assertTrue(recArray.length == 92);
+		
+		handler.setStartRow(90L);
+		recArray = runner.query(nativeConnection, 
+				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", handler);
+		Assert.assertTrue(recArray != null);
+		Assert.assertTrue(recArray.length == 3);
+		
+		handler.setStartRow(null);
+		handler.setMaxRows(10L);
+		recArray = runner.query(nativeConnection, 
+				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", handler);
+		Assert.assertTrue(recArray != null);
+		Assert.assertTrue(recArray.length == 10);
 	}
 
 }

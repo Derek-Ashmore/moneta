@@ -28,6 +28,8 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 	
 	private Topic topic;
 	private String sqlText;
+	private Long maxRows=null;
+	private Long startRow=null;
 	
 	public SqlSelectExecutor(String topicName, String sqlText) {
 		topic = MonetaEnvironment.getConfiguration().getTopic(topicName);
@@ -45,7 +47,11 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 			topicConnection = MonetaEnvironment.getConfiguration()
 					.getConnection(topic.getDataSourceName());
 			
-			result.setResultData(runner.query(topicConnection, sqlText, new RecordResultSetHandler()));
+			RecordResultSetHandler handler = new RecordResultSetHandler();
+			handler.setMaxRows(this.getMaxRows());
+			handler.setStartRow(this.getStartRow());
+			
+			result.setResultData(runner.query(topicConnection, sqlText, handler));
 			result.setNbrRows(Long.valueOf(result.getResultData().length));
 			
 			if (topicConnection.getAutoCommit()) {
@@ -60,6 +66,22 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 		
 		return result;
 
+	}
+
+	public Long getMaxRows() {
+		return maxRows;
+	}
+
+	public void setMaxRows(Long maxRows) {
+		this.maxRows = maxRows;
+	}
+
+	public Long getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(Long startRow) {
+		this.startRow = startRow;
 	}
 
 }

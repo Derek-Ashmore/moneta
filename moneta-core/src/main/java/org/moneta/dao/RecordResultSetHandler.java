@@ -24,6 +24,11 @@ import org.moneta.types.Record;
 import org.moneta.types.Value;
 
 class RecordResultSetHandler implements ResultSetHandler<Record[]> {
+	
+	private Long maxRows=null;
+	private Long startRow=null;
+	
+	public RecordResultSetHandler() {}
 
 	public Record[] handle(ResultSet rSet) throws SQLException {
 		ResultSetMetaData meta = rSet.getMetaData();
@@ -31,6 +36,11 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 		Record record = null;
 		List<Value> valueList = null;
 		
+		if (startRow != null && startRow > 0) {
+			for (int i = 0; i < startRow - 1 && rSet.next(); i++);
+		}
+		
+		long nbrRows = 0;
 		while (rSet.next()) {
 			record = new Record();
 			recordList.add(record);
@@ -41,9 +51,30 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 				valueList.add(new Value(meta.getColumnName(columnIndex), rSet.getObject(columnIndex)));
 			}
 			record.setValues(valueList.toArray(new Value[0]));
+			
+			nbrRows++;
+			if (maxRows != null && maxRows > 0 && nbrRows >= maxRows) {
+				break;
+			}
 		}
 
 		return recordList.toArray(new Record[0]);
+	}
+
+	public Long getMaxRows() {
+		return maxRows;
+	}
+
+	public void setMaxRows(Long maxRows) {
+		this.maxRows = maxRows;
+	}
+
+	public Long getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(Long startRow) {
+		this.startRow = startRow;
 	}
 
 }

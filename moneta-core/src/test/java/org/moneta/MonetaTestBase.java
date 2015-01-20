@@ -13,20 +13,23 @@
  */
 package org.moneta;
 
-import java.sql.Connection;
-import java.util.Properties;
+import java.io.FileInputStream;
 
 import org.junit.Before;
+import org.moneta.config.MonetaConfiguration;
+import org.moneta.config.MonetaConfigurationTest;
+import org.moneta.config.MonetaEnvironment;
 
-public class HSqlTest {
-	
-	protected Connection nativeConnection;
+public class MonetaTestBase extends HSqlTestBase {
 
 	@Before
 	public void setUp() throws Exception {
-		org.hsqldb.jdbcDriver nativeDriver = new org.hsqldb.jdbcDriver();
-        nativeConnection = nativeDriver.connect("jdbc:hsqldb:mem:TestDb", new Properties());
+		super.setUp();
+		MonetaEnvironment.setConfiguration( 
+				new MonetaConfiguration(
+						new FileInputStream(MonetaConfigurationTest.CONFIG_TEST_FILE_NAME)));
 	}
+	
 
 
 }

@@ -13,16 +13,14 @@
  */
 package org.moneta.dao;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.moneta.MonetaTest;
+import org.moneta.MonetaTestBase;
 import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
 
-public class MonetaSearchDAOTest extends MonetaTest {
+public class MonetaSearchDAOTest extends MonetaTestBase {
 	
 	MonetaSearchDAO dao;
 	SearchRequest searchRequest;
@@ -41,6 +39,17 @@ public class MonetaSearchDAOTest extends MonetaTest {
 		SearchResult result = dao.find(searchRequest);
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(result.getResultData().length == 92);
+		
+		searchRequest.setStartRow(90L);
+		result = dao.find(searchRequest);
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 3);
+		
+		searchRequest.setStartRow(null);
+		searchRequest.setMaxRows(10L);
+		result = dao.find(searchRequest);
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 10);
 	}
 
 }

@@ -15,10 +15,10 @@ package org.moneta.dao;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.moneta.MonetaTest;
+import org.moneta.MonetaTestBase;
 import org.moneta.types.search.SearchResult;
 
-public class SqlSelectExecutorTest extends MonetaTest {
+public class SqlSelectExecutorTest extends MonetaTestBase {
 
 	@Test
 	public void testBasic() throws Exception {
@@ -27,6 +27,20 @@ public class SqlSelectExecutorTest extends MonetaTest {
 		SearchResult result = exec.call();
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(result.getResultData().length == 92);
+		
+		exec.setStartRow(90L);
+		Assert.assertTrue(exec.getStartRow() == 90L);
+		result = exec.call();
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 3);
+		
+		exec.setStartRow(null);
+		exec.setMaxRows(10L);
+		Assert.assertTrue(exec.getMaxRows() == 10L);
+		
+		result = exec.call();
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 10);
 	}
 
 }
