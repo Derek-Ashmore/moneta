@@ -11,38 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta;
 
-/**
- * Represents an individual value for a search result.
- * @author D. Ashmore
- *
- */
-public class Value extends BaseType {
+import java.sql.Connection;
+import java.util.Properties;
+
+import org.junit.Before;
+
+public class HSqlTest {
 	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
+	protected Connection nativeConnection;
+
+	@Before
+	public void setUp() throws Exception {
+		org.hsqldb.jdbcDriver nativeDriver = new org.hsqldb.jdbcDriver();
+        nativeConnection = nativeDriver.connect("jdbc:hsqldb:mem:TestDb", new Properties());
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
-	}
+
 
 }

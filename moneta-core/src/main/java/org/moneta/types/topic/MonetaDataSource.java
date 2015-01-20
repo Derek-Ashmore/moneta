@@ -29,6 +29,8 @@ public class MonetaDataSource extends BaseType {
 	private String dataSourceName;
 	private Class<? extends Driver> driver;
 	private String connectionUrl;
+	private Dialect dialect = Dialect.ANSI;
+	
 	private Map<String,String> jdbcConnectionProperties = new HashMap<String,String>();
 	private Map<String,String> connectionPoolProperties = new HashMap<String,String>();
 	
@@ -62,6 +64,14 @@ public class MonetaDataSource extends BaseType {
 
 	public Map<String, String> getConnectionPoolProperties() {
 		return connectionPoolProperties;
+	}
+
+	public Dialect getDialect() {
+		return dialect;
+	}
+
+	public void setDialect(Dialect dialect) {
+		this.dialect = dialect;
 	}
 
 

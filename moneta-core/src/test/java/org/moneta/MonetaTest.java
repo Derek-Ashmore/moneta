@@ -11,38 +11,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta;
 
-/**
- * Represents an individual value for a search result.
- * @author D. Ashmore
- *
- */
-public class Value extends BaseType {
-	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
+import java.io.FileInputStream;
+
+import org.junit.Before;
+import org.moneta.config.MonetaConfiguration;
+import org.moneta.config.MonetaConfigurationTest;
+import org.moneta.config.MonetaEnvironment;
+
+public class MonetaTest extends HSqlTest {
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		MonetaEnvironment.setConfiguration( 
+				new MonetaConfiguration(
+						new FileInputStream(MonetaConfigurationTest.CONFIG_TEST_FILE_NAME)));
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
-	}
+
 
 }

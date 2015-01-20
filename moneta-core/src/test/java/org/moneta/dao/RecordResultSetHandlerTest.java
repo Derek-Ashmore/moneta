@@ -11,38 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.dao;
 
-/**
- * Represents an individual value for a search result.
- * @author D. Ashmore
- *
- */
-public class Value extends BaseType {
+import org.apache.commons.dbutils.QueryRunner;
+import org.junit.Assert;
+import org.junit.Test;
+import org.moneta.HSqlTest;
+import org.moneta.types.Record;
+
+public class RecordResultSetHandlerTest extends HSqlTest {
 	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
+	@Test
+	public void testBasicHappyPath() throws Exception {
+		QueryRunner runner = new QueryRunner();
+		Record[] recArray = runner.query(nativeConnection, 
+				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", new RecordResultSetHandler());
+		Assert.assertTrue(recArray != null);
+		Assert.assertTrue(recArray.length == 92);
 	}
 
 }

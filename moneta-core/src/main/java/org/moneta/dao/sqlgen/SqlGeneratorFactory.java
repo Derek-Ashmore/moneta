@@ -11,38 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.dao.sqlgen;
+
+import org.moneta.types.topic.Dialect;
 
 /**
- * Represents an individual value for a search result.
+ * Provides a SqlGenerator given a specific dialect.
  * @author D. Ashmore
  *
  */
-public class Value extends BaseType {
+public class SqlGeneratorFactory {
 	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
+	public static SqlGenerator findSqlGenerator(Dialect dialect) {
+		return new DefaultSqlGenerator();
 	}
 
 }

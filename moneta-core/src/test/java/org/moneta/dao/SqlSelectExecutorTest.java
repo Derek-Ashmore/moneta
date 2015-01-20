@@ -11,38 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.dao;
 
-/**
- * Represents an individual value for a search result.
- * @author D. Ashmore
- *
- */
-public class Value extends BaseType {
-	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
+import org.junit.Assert;
+import org.junit.Test;
+import org.moneta.MonetaTest;
+import org.moneta.types.search.SearchResult;
+
+public class SqlSelectExecutorTest extends MonetaTest {
+
+	@Test
+	public void testBasic() throws Exception {
+		SqlSelectExecutor exec = new SqlSelectExecutor("Environment", 
+				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES");
+		SearchResult result = exec.call();
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 92);
 	}
 
 }

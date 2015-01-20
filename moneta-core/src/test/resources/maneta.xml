@@ -1,6 +1,6 @@
 <ManetaConfiguration>
 	<DataSources>
-		<DataSource name="InMemoryDb" url="jdbc:hsqldb:mem:my-sample" driver="org.hsqldb.jdbc.JDBCDriver">
+		<DataSource name="InMemoryDb" url="jdbc:hsqldb:mem:my-sample" dialect="ansi" driver="org.hsqldb.jdbc.JDBCDriver">
 			<ConnectionProperties>
 				<Property name="user" value="SA"/>
 				<Property name="password" value=""/>
@@ -28,4 +28,7 @@
 			</PoolProperties>
 		</DataSource>
 	</DataSources>
+	<Topics>
+		<Topic name="Environment" dataSource="InMemoryDb" schema="INFORMATION_SCHEMA" table="SYSTEM_TABLES" readOnly="true"/>
+	</Topics>
 </ManetaConfiguration>

@@ -11,38 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta.config;
 
-/**
- * Represents an individual value for a search result.
- * @author D. Ashmore
- *
- */
-public class Value extends BaseType {
+import org.moneta.types.BaseType;
+
+public class MonetaEnvironment extends BaseType {
 	
-	private String name;
-	private Object value;
-	
-	public Value()   {}
-	public Value(String name, Object value)   {
-		this.setName(name);
-		this.setValue(value);
+	private static MonetaConfiguration configuration;
+
+	public static MonetaConfiguration getConfiguration() {
+		return configuration;
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
+
+	public static void setConfiguration(MonetaConfiguration configuration) {
+		MonetaEnvironment.configuration = configuration;
 	}
 
 }

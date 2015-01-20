@@ -23,7 +23,10 @@ import org.moneta.types.BaseType;
 public class Topic extends BaseType {
 	
 	private String topicName;
+	private String dataSourceName;
+	private String schemaName;
 	private String tableName;
+	private Boolean readOnly = Boolean.FALSE;
 	
 	public String getTopicName() {
 		return topicName;
@@ -39,6 +42,30 @@ public class Topic extends BaseType {
 	
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+	}
+
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
+	}
+
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public String getDataSourceName() {
+		return dataSourceName;
+	}
+
+	public void setDataSourceName(String dataSourceName) {
+		this.dataSourceName = dataSourceName;
 	}
 
 }

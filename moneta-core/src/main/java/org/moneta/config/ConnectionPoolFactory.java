@@ -84,6 +84,7 @@ class ConnectionPoolFactory {
 		
 		GenericObjectPool<PoolableConnection> pool = 
 				new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
+		poolableConnectionFactory.setPool(pool);
 		
 		for (String propName: new HashSet<String>(unusedConnectionPoolPropSet)) {
 			pDesc = assignProperty(dataSourceType.getDataSourceName(), pool,

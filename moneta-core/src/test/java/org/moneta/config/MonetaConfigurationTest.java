@@ -22,14 +22,17 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.moneta.types.topic.MonetaDataSource;
+import org.moneta.types.topic.Topic;
 
 public class MonetaConfigurationTest {
 	
+	public static final String CONFIG_TEST_FILE_NAME = "src/test/resources/maneta.xml";
 	File testFile;
 
 	@Before
 	public void setUp() throws Exception {
-		testFile = new File("src/test/resources/maneta.xml");
+		testFile = new File(CONFIG_TEST_FILE_NAME);
 	}
 
 	@After
@@ -69,6 +72,12 @@ public class MonetaConfigurationTest {
 		MonetaConfiguration config = new MonetaConfiguration(new FileInputStream(testFile.getAbsolutePath()));
 		Connection conn = config.getConnection("InMemoryDb");
 		Assert.assertTrue(conn != null);
+		
+		Topic topic = config.getTopic("Environment");
+		Assert.assertTrue(topic != null);
+		
+		MonetaDataSource source = config.getMonetaDataSource("InMemoryDb");
+		Assert.assertTrue(source != null);
 	}
 
 }
