@@ -62,7 +62,12 @@ public class DefaultSqlGeneratorTest {
 	@Test
 	public void testGenerateSelect() throws Exception {
 		Assert.assertTrue("select col1,col2,col3 from mySchema.myTable".equals(
-				generator.generateSelect(topic, null, fieldNames)));
+				generator.generateSelect(topic, null, fieldNames).getSqlText()));
+	}
+	
+	@Test
+	public void testFormatFilterCriteria() throws Exception {
+		
 	}
 
 }

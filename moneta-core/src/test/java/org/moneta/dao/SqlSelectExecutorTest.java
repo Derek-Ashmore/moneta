@@ -16,6 +16,7 @@ package org.moneta.dao;
 import org.junit.Assert;
 import org.junit.Test;
 import org.moneta.MonetaTestBase;
+import org.moneta.dao.types.SqlStatement;
 import org.moneta.types.search.SearchResult;
 
 public class SqlSelectExecutorTest extends MonetaTestBase {
@@ -23,7 +24,7 @@ public class SqlSelectExecutorTest extends MonetaTestBase {
 	@Test
 	public void testBasic() throws Exception {
 		SqlSelectExecutor exec = new SqlSelectExecutor("Environment", 
-				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES");
+				new SqlStatement("select * from INFORMATION_SCHEMA.SYSTEM_TABLES"));
 		SearchResult result = exec.call();
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(result.getResultData().length == 92);

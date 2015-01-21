@@ -11,19 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.dao.sqlgen;
-
-import org.moneta.dao.types.SqlStatement;
-import org.moneta.types.search.CompositeCriteria;
-import org.moneta.types.topic.Topic;
-
 /**
- * Generates SQL statements
  * @author D. Ashmore
  *
  */
-public interface SqlGenerator {
-	
-	public SqlStatement generateSelect(Topic topic, CompositeCriteria searchCriteria, String[] fieldNames);
-
-}
+package org.moneta.dao.types;

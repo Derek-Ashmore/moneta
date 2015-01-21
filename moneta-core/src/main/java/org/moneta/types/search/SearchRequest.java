@@ -24,7 +24,7 @@ public class SearchRequest extends BaseType {
 	
 	private String topic;
 	private String[] fieldNames;
-	private SearchCriteria[] searchCriteria;
+	private CompositeCriteria searchCriteria;
 	private Long maxRows;
 	private Long startRow;
 	
@@ -36,11 +36,11 @@ public class SearchRequest extends BaseType {
 		this.fieldNames = fieldNames;
 	}
 	
-	public SearchCriteria[] getSearchCriteria() {
+	public CompositeCriteria getSearchCriteria() {
 		return searchCriteria;
 	}
 	
-	public void setSearchCriteria(SearchCriteria[] searchCriteria) {
+	public void setSearchCriteria(CompositeCriteria searchCriteria) {
 		this.searchCriteria = searchCriteria;
 	}
 

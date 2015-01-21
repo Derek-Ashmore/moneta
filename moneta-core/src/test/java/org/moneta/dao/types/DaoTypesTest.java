@@ -11,19 +11,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.dao.sqlgen;
+package org.moneta.dao.types;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.moneta.BeanTester;
 import org.moneta.dao.types.SqlStatement;
-import org.moneta.types.search.CompositeCriteria;
-import org.moneta.types.topic.Topic;
 
-/**
- * Generates SQL statements
- * @author D. Ashmore
- *
- */
-public interface SqlGenerator {
+public class DaoTypesTest {
 	
-	public SqlStatement generateSelect(Topic topic, CompositeCriteria searchCriteria, String[] fieldNames);
+	private BeanTester beanTester;
+
+	@Before
+	public void setUp() throws Exception {
+		beanTester = new BeanTester();
+	}
+
+	@Test
+	public void test() throws Exception {
+		beanTester.testBean(SqlStatement.class);
+	}
 
 }

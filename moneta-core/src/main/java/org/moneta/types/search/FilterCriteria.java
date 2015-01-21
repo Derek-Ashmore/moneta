@@ -20,7 +20,7 @@ import org.moneta.types.BaseType;
  * @author D. Ashmore
  *
  */
-public class SearchCriteria extends BaseType implements Criteria {
+public class FilterCriteria extends BaseType implements Criteria {
 	
 	public static enum Operation {EQUAL, NOT_EQUAL, GREATER_THAN, LESS_THAN, IS_NULL, IS_NOT_NULL, LIKE};
 	

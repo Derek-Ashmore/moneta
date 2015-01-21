@@ -11,37 +11,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types;
+package org.moneta;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.moneta.BeanTester;
-import org.moneta.types.search.CompositeCriteria;
-import org.moneta.types.search.FilterCriteria;
 import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
-import org.moneta.types.topic.Topic;
 
-public class MonetaTypeTest {
+public class MonetaTest extends MonetaTestBase {
 	
-	private BeanTester beanTester;
+	SearchRequest searchRequest;
+	Moneta moneta;
 
 	@Before
 	public void setUp() throws Exception {
-		beanTester = new BeanTester();
+		super.setUp();
+		moneta = new Moneta();
+		searchRequest = new SearchRequest();		
+		searchRequest.setTopic("Environment");
 	}
 
 	@Test
-	public void test() throws Exception {
-		beanTester.testBean(CompositeCriteria.class);
-		beanTester.testBean(Record.class);
-		beanTester.testBean(FilterCriteria.class);
-		beanTester.testBean(SearchRequest.class);
-		beanTester.testBean(SearchResult.class);
-		beanTester.testBean(Value.class);
-		
-		// topic package tests
-		beanTester.testBean(Topic.class);
+	public void testBasic() throws Exception {
+		SearchResult result = moneta.find(searchRequest);
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 92);
 	}
 
 }

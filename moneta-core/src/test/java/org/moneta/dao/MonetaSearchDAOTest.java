@@ -29,8 +29,7 @@ public class MonetaSearchDAOTest extends MonetaTestBase {
 	public void setUp() throws Exception {
 		super.setUp();
 		dao = new MonetaSearchDAO();
-		searchRequest = new SearchRequest();
-		
+		searchRequest = new SearchRequest();		
 		searchRequest.setTopic("Environment");
 	}
 

@@ -11,36 +11,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types.search;
+package org.moneta.dao.types;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.moneta.types.BaseType;
 
-/**
- * Combines individual search criteria with logical oeprators.
- * @author D. Ashmore
- *
- */
-public class CompositeCriteria extends BaseType implements Criteria {
+public class SqlStatement extends BaseType {
 	
-	public static enum Operator {AND, OR};
-	
-	private Operator operator;
-	private Criteria[] searchCriteria;
-	
-	public Operator getOperator() {
-		return operator;
+	public SqlStatement()  {}
+	public SqlStatement(String sqlText)  {
+		this.setSqlText(sqlText);
 	}
 	
-	public void setOperator(Operator operator) {
-		this.operator = operator;
+	private String sqlText;
+	private List<Object> hostVariableValueList = new ArrayList<Object>();
+	
+	public String getSqlText() {
+		return sqlText;
 	}
 	
-	public Criteria[] getSearchCriteria() {
-		return searchCriteria;
+	public void setSqlText(String sqlText) {
+		this.sqlText = sqlText;
+	}
+
+	public List<Object> getHostVariableValueList() {
+		return hostVariableValueList;
 	}
 	
-	public void setSearchCriteria(Criteria[] searchCriteria) {
-		this.searchCriteria = searchCriteria;
-	}
 
 }

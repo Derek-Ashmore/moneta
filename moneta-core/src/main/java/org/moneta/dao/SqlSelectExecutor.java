@@ -21,21 +21,23 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.moneta.config.MonetaEnvironment;
+import org.moneta.dao.types.SqlStatement;
 import org.moneta.types.search.SearchResult;
 import org.moneta.types.topic.Topic;
 
 class SqlSelectExecutor implements Callable<SearchResult> {
 	
 	private Topic topic;
-	private String sqlText;
+	private SqlStatement sqlStmt;
 	private Long maxRows=null;
 	private Long startRow=null;
 	
-	public SqlSelectExecutor(String topicName, String sqlText) {
+	public SqlSelectExecutor(String topicName, SqlStatement sqlStmt) {
 		topic = MonetaEnvironment.getConfiguration().getTopic(topicName);
 		Validate.notNull(topic, "topic not found.    topic=" + topicName);
-		Validate.notEmpty(sqlText, "Null or blank SqlText not allowed.");
-		this.sqlText = sqlText;
+		Validate.notNull(sqlStmt, "Null SqlStatement not allowed");
+		Validate.notEmpty(sqlStmt.getSqlText(), "Null or blank SqlText not allowed.");
+		this.sqlStmt = sqlStmt;
 	}
 
 	public SearchResult call() {
@@ -51,7 +53,8 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 			handler.setMaxRows(this.getMaxRows());
 			handler.setStartRow(this.getStartRow());
 			
-			result.setResultData(runner.query(topicConnection, sqlText, handler));
+			result.setResultData(runner.query(topicConnection, sqlStmt.getSqlText(), 
+					handler, sqlStmt.getHostVariableValueList().toArray()));
 			result.setNbrRows(Long.valueOf(result.getResultData().length));
 			
 			if (topicConnection.getAutoCommit()) {

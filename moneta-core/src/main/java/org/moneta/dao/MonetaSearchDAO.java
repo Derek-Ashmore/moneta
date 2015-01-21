@@ -16,6 +16,7 @@ package org.moneta.dao;
 import org.apache.commons.lang3.Validate;
 import org.moneta.config.MonetaEnvironment;
 import org.moneta.dao.sqlgen.SqlGeneratorFactory;
+import org.moneta.dao.types.SqlStatement;
 import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
 import org.moneta.types.topic.MonetaDataSource;
@@ -32,11 +33,11 @@ public class MonetaSearchDAO extends BaseDAO {
 		
 		MonetaDataSource source = MonetaEnvironment.getConfiguration().getMonetaDataSource(searchTopic.getDataSourceName());
 		
-		String selectText = SqlGeneratorFactory.findSqlGenerator(source.getDialect())
+		SqlStatement sqlStmt = SqlGeneratorFactory.findSqlGenerator(source.getDialect())
 				.generateSelect(searchTopic, 
 						request.getSearchCriteria(), 
 						request.getFieldNames());
-		SqlSelectExecutor sExec = new SqlSelectExecutor(request.getTopic(), selectText);
+		SqlSelectExecutor sExec = new SqlSelectExecutor(request.getTopic(), sqlStmt);
 		sExec.setMaxRows(request.getMaxRows());
 		sExec.setStartRow(request.getStartRow());
 		return sExec.call();
