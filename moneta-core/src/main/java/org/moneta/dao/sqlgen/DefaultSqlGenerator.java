@@ -80,6 +80,9 @@ public class DefaultSqlGenerator implements SqlGenerator {
 				builder.append("where ");
 			}
 			else {
+				builder.append(" ");
+				builder.append(searchCriteria.getOperator().toString().toLowerCase());
+				builder.append(" ");
 				appendCriteria(builder, criteria, sqlStatement.getHostVariableValueList());
 			}
 		}
@@ -89,7 +92,8 @@ public class DefaultSqlGenerator implements SqlGenerator {
 	}
 	
 	protected String formatCompositeCriteria(CompositeCriteria compositeCriteria, List<Object> hostVariableValueList) {
-		Validate.notNull(compositeCriteria.getOperator(), "Null operator not allowed.  criteria="+compositeCriteria);
+		Validate.notNull(compositeCriteria, "Null compositeCriteria not allowed.  criteria="+compositeCriteria);
+		Validate.notNull(compositeCriteria.getOperator(), "Null compositeCriteria operator not allowed.  criteria="+compositeCriteria);
 		if (compositeCriteria.getSearchCriteria() == null) {
 			return "";
 		}
@@ -121,6 +125,7 @@ public class DefaultSqlGenerator implements SqlGenerator {
 	}
 	
 	protected String formatFilterCriteria(FilterCriteria filterCriteria, List<Object> hostVariableValueList) {
+		Validate.notNull(filterCriteria, "Null filterCriteria not allowed.");
 		Validate.notNull(filterCriteria.getOperation(), "Null operation not allowed.  criteria="+filterCriteria);
 		Validate.notEmpty(filterCriteria.getFieldName(), "Null or blank field name not allowed.");
 		
@@ -131,6 +136,7 @@ public class DefaultSqlGenerator implements SqlGenerator {
 		if ( !FilterCriteria.Operation.IS_NULL.equals(filterCriteria.getOperation()) && 
 				!FilterCriteria.Operation.IS_NOT_NULL.equals(filterCriteria.getOperation())) {
 			hostVariableValueList.add(filterCriteria.getValue());
+			builder.append("?");
 		}
 
 		return builder.toString();
