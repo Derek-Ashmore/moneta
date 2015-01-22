@@ -14,7 +14,6 @@
 package org.moneta.error;
 
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
-import org.apache.commons.lang3.exception.ExceptionContext;
 
 /**
  * Application exception class for Moneta
@@ -25,24 +24,16 @@ public class MonetaException extends ContextedRuntimeException {
 
 	private static final long serialVersionUID = -682655095144383360L;
 
-	public MonetaException() {
-	}
-
 	public MonetaException(String message) {
 		super(message);
 	}
 
-	public MonetaException(Throwable cause) {
-		super(cause);
-	}
+//	public MonetaException(Throwable cause) {
+//		super(cause);
+//	}
 
 	public MonetaException(String message, Throwable cause) {
 		super(message, cause);
-	}
-
-	public MonetaException(String message, Throwable cause,
-			ExceptionContext context) {
-		super(message, cause, context);
 	}
 
 }
