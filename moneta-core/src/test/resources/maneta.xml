@@ -29,6 +29,12 @@
 		</DataSource>
 	</DataSources>
 	<Topics>
-		<Topic name="Environment" dataSource="InMemoryDb" schema="INFORMATION_SCHEMA" table="SYSTEM_TABLES" readOnly="true"/>
+		<Topic name="Environment" dataSource="InMemoryDb" catalog="PUBLIC" schema="INFORMATION_SCHEMA" table="SYSTEM_TABLES" readOnly="true">
+			<PrimaryKey>
+				<Field>TABLE_CAT</Field>
+				<Field>TABLE_SCHEM</Field>
+				<Field>TABLE_NAME</Field>
+			</PrimaryKey>
+		</Topic>
 	</Topics>
 </ManetaConfiguration>

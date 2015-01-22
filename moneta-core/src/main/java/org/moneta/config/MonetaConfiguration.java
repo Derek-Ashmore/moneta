@@ -166,6 +166,7 @@ public class MonetaConfiguration {
 			topic.setTopicName(config.getString("Topics.Topic(" + i + ")[@name]"));
 			topic.setDataSourceName(config.getString("Topics.Topic(" + i + ")[@dataSource]"));
 			topic.setSchemaName(config.getString("Topics.Topic(" + i + ")[@schema]"));
+			topic.setCatalogName(config.getString("Topics.Topic(" + i + ")[@catalog]"));
 			topic.setTableName(config.getString("Topics.Topic(" + i + ")[@table]"));
 			
 			readOnlyStr = config.getString("Topics.Topic(" + i + ")[@readOnly]");
@@ -174,20 +175,27 @@ public class MonetaConfiguration {
 				topic.setReadOnly(bValue);
 			}
 			
-			Validate.notEmpty(topic.getTopicName(), "Null or blank Topics.Topic.name not allowed");
-			Validate.notEmpty(topic.getDataSourceName(), "Null or blank Topics.Topic.dataSource not allowed");
-			Validate.notEmpty(topic.getTableName(), "Null or blank Topics.Topic.table not allowed");
-			Validate.notNull(topic.getReadOnly(), "Null or blank Topics.Topic.readOnly not allowed");
-			if ( !connectionPoolMap.containsKey(topic.getDataSourceName())) {
-				throw new MonetaException("Topic references non-existent data source")
-					.addContextValue("topic", topic.getTopicName())
-					.addContextValue("dataSource", topic.getDataSourceName());
-			}
-			
+			validateTopic(topic);			
 			topicMap.put(topic.getTopicName(), topic);
 		}
 		
 		Validate.isTrue(topicMap.size() > 0, "No Topics configured.");	
+	}
+	protected void validateTopic(Topic topic) {
+		Validate.notEmpty(topic.getTopicName(), "Null or blank Topics.Topic.name not allowed");
+		Validate.notEmpty(topic.getDataSourceName(), "Null or blank Topics.Topic.dataSource not allowed.  topic="+topic.getTopicName());
+		Validate.notEmpty(topic.getTableName(), "Null or blank Topics.Topic.table not allowed.  topic="+topic.getTopicName());
+		Validate.notNull(topic.getReadOnly(), "Null or blank Topics.Topic.readOnly not allowed.  topic="+topic.getTopicName());
+		
+		if (StringUtils.isEmpty(topic.getSchemaName())) {
+			Validate.isTrue(topic.getCatalogName()==null, "Null or blank Topics.Topic.catalog not allowed when schema is provided.  topic="+topic.getTopicName());
+		}
+		
+		if ( !connectionPoolMap.containsKey(topic.getDataSourceName())) {
+			throw new MonetaException("Topic references non-existent data source")
+				.addContextValue("topic", topic.getTopicName())
+				.addContextValue("dataSource", topic.getDataSourceName());
+		}
 	}
 	
 	/**

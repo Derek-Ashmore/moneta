@@ -37,6 +37,7 @@ public class DefaultSqlGeneratorTest {
 		topic = new Topic();
 		topic.setTableName("myTable");
 		topic.setSchemaName("mySchema");
+		topic.setCatalogName("myCatalog");
 	}
 
 	@Test
@@ -51,10 +52,17 @@ public class DefaultSqlGeneratorTest {
 	
 	@Test
 	public void testGenerateFromClause() throws Exception {
-		Assert.assertTrue("from mySchema.myTable".equals(
+		Assert.assertTrue("from myCatalog.mySchema.myTable".equals(
 				generator.generateFromClause(topic, DefaultSqlGenerator.LockIntent.NONE)));
 		topic.setSchemaName(null);
+		Assert.assertTrue("from myCatalog..myTable".equals(
+				generator.generateFromClause(topic, DefaultSqlGenerator.LockIntent.NONE)));
+		topic.setCatalogName(null);
 		Assert.assertTrue("from myTable".equals(
+				generator.generateFromClause(topic, DefaultSqlGenerator.LockIntent.NONE)));
+		
+		topic.setSchemaName("mySchema");
+		Assert.assertTrue("from mySchema.myTable".equals(
 				generator.generateFromClause(topic, DefaultSqlGenerator.LockIntent.NONE)));
 	}
 	
@@ -68,7 +76,7 @@ public class DefaultSqlGeneratorTest {
 	
 	@Test
 	public void testGenerateSelect() throws Exception {
-		Assert.assertTrue("select col1,col2,col3 from mySchema.myTable".equals(
+		Assert.assertTrue("select col1,col2,col3 from myCatalog.mySchema.myTable".equals(
 				generator.generateSelect(topic, null, fieldNames).getSqlText()));
 		
 		FilterCriteria fCrit1 = createFilterCriteria("myCol1", FilterCriteria.Operation.EQUAL, "fu");
@@ -78,7 +86,7 @@ public class DefaultSqlGeneratorTest {
 		
 		System.out.println(generator.generateSelect(topic, compositeCriteria, fieldNames));
 		SqlStatement stmt = generator.generateSelect(topic, compositeCriteria, fieldNames);
-		Assert.assertTrue("select col1,col2,col3 from mySchema.myTable where  and myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
+		Assert.assertTrue("select col1,col2,col3 from myCatalog.mySchema.myTable where  and myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
 		Assert.assertTrue(stmt.getHostVariableValueList().size()==4);
 		Assert.assertTrue("fu".equals(stmt.getHostVariableValueList().get(0)));
 		Assert.assertTrue("bar".equals(stmt.getHostVariableValueList().get(1)));

@@ -162,13 +162,24 @@ public class DefaultSqlGenerator implements SqlGenerator {
 	protected String generateFromClause(Topic topic, LockIntent lockIntent) {
 		StringBuilder builder = new StringBuilder("from ");
 		
+		if ( !StringUtils.isEmpty(topic.getCatalogName())) {
+			builder.append(this.formatCatalogName(topic.getCatalogName()));
+			builder.append(".");
+		}
 		if ( !StringUtils.isEmpty(topic.getSchemaName())) {
 			builder.append(this.formatSchemaName(topic.getSchemaName()));
+			builder.append(".");
+		}
+		else if (!StringUtils.isEmpty(topic.getCatalogName())) {
 			builder.append(".");
 		}
 		builder.append(this.formatTableName(topic.getTableName(), lockIntent));
 
 		return builder.toString();
+	}
+	
+	protected String formatCatalogName(String catalogName) {
+		return catalogName;
 	}
 	
 	protected String formatSchemaName(String schemaName) {

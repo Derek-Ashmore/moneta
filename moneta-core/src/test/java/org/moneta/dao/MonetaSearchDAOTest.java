@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.moneta.MonetaTestBase;
+import org.moneta.config.MonetaEnvironment;
 import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
 
@@ -39,6 +40,7 @@ public class MonetaSearchDAOTest extends MonetaTestBase {
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(result.getResultData().length == 92);
 		
+		MonetaEnvironment.getConfiguration().getTopic("Environment").setSchemaName(null);
 		searchRequest.setStartRow(90L);
 		result = dao.find(searchRequest);
 		Assert.assertTrue(result != null);

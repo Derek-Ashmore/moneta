@@ -25,6 +25,7 @@ public class Topic extends BaseType {
 	private String topicName;
 	private String dataSourceName;
 	private String schemaName;
+	private String catalogName;
 	private String tableName;
 	private Boolean readOnly = Boolean.FALSE;
 	
@@ -66,6 +67,14 @@ public class Topic extends BaseType {
 
 	public void setDataSourceName(String dataSourceName) {
 		this.dataSourceName = dataSourceName;
+	}
+
+	public String getCatalogName() {
+		return catalogName;
+	}
+
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
 	}
 
 }

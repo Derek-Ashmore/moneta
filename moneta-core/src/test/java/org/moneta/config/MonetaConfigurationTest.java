@@ -78,6 +78,31 @@ public class MonetaConfigurationTest {
 		
 		MonetaDataSource source = config.getMonetaDataSource("InMemoryDb");
 		Assert.assertTrue(source != null);
+		
+		topic.setDataSourceName("crap");
+		testValidate(config, topic, "non-existent data source");
+		topic.setSchemaName(null);
+		testValidate(config, topic, "not allowed when schema is provided");
+		topic.setReadOnly(null);
+		testValidate(config, topic, "readOnly");
+		topic.setTableName(null);
+		testValidate(config, topic, "table");
+		topic.setDataSourceName(null);
+		testValidate(config, topic, "dataSource");
+		topic.setTopicName(null);
+		testValidate(config, topic, "name");
+	}
+
+	protected void testValidate(MonetaConfiguration config, Topic topic,
+			String testPhrase) {
+		Throwable exceptionThrown = null;
+		try {config.validateTopic(topic);}
+		catch (Exception e) {
+			exceptionThrown = e;
+		}
+		Assert.assertTrue(exceptionThrown != null);
+		Assert.assertTrue(exceptionThrown.getMessage() != null);
+		Assert.assertTrue(exceptionThrown.getMessage().contains(testPhrase));
 	}
 
 }
