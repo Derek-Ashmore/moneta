@@ -41,6 +41,7 @@ import org.moneta.types.topic.TopicKeyField;
  */
 public class MonetaConfiguration {
 	
+	public static final String MONETA_CONFIGURATION_PROPERTY = "moneta.configuration";
 	public static final String DEFAULT_CONFIGURATION_FILE_NAME="moneta.xml";
 	
 	private final Map<String,MonetaDataSource> dataSourceMap = new HashMap<String,MonetaDataSource>();
@@ -56,13 +57,16 @@ public class MonetaConfiguration {
 	}
 	
 	protected static final XMLConfiguration findConfiguration() {
-		String configFileName = System.getProperty("moneta.configuration");
+		String configFileName = System.getProperty(MONETA_CONFIGURATION_PROPERTY);
 		XMLConfiguration config = null;
 		if ( !StringUtils.isEmpty(configFileName)) {
 			return loadConfigurationFromFile(configFileName);
 		}
 		
 		InputStream configurationStream = MonetaConfiguration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_NAME);		
+		if (configurationStream == null) {
+			throw new MonetaException("Moneta configuration not found");
+		}
 		config = loadConfigurationFromStream(configurationStream);
 		
 		return config;

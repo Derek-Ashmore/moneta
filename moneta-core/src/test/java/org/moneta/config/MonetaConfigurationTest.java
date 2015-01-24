@@ -28,7 +28,7 @@ import org.moneta.types.topic.TopicKeyField;
 
 public class MonetaConfigurationTest {
 	
-	public static final String CONFIG_TEST_FILE_NAME = "src/test/resources/maneta.xml";
+	public static final String CONFIG_TEST_FILE_NAME = "src/test/resources/moneta.xml";
 	File testFile;
 
 	@Before
@@ -66,6 +66,16 @@ public class MonetaConfigurationTest {
 		}
 		Assert.assertTrue(exceptionThrown != null);
 		
+	}
+	
+	@Test
+	public void testFindConfiguration() throws Exception {
+		XMLConfiguration config = MonetaConfiguration.findConfiguration();
+		Assert.assertTrue(config != null);
+		
+		System.setProperty(MonetaConfiguration.MONETA_CONFIGURATION_PROPERTY, CONFIG_TEST_FILE_NAME);
+		config = MonetaConfiguration.findConfiguration();
+		Assert.assertTrue(config != null);
 	}
 	
 	@Test
