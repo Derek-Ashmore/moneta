@@ -13,6 +13,11 @@
  */
 package org.moneta.types.topic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.moneta.types.BaseType;
 
 /**
@@ -28,6 +33,9 @@ public class Topic extends BaseType {
 	private String catalogName;
 	private String tableName;
 	private Boolean readOnly = Boolean.FALSE;
+	
+	private Map<String,String> aliasMap = new HashMap<String,String>();
+	private List<TopicKeyField> keyFieldList = new ArrayList<TopicKeyField>();
 	
 	public String getTopicName() {
 		return topicName;
@@ -75,6 +83,14 @@ public class Topic extends BaseType {
 
 	public void setCatalogName(String catalogName) {
 		this.catalogName = catalogName;
+	}
+
+	public Map<String, String> getAliasMap() {
+		return aliasMap;
+	}
+
+	public List<TopicKeyField> getKeyFieldList() {
+		return keyFieldList;
 	}
 
 }

@@ -21,6 +21,7 @@ import org.moneta.types.search.FilterCriteria;
 import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
 import org.moneta.types.topic.Topic;
+import org.moneta.types.topic.TopicKeyField;
 
 public class MonetaTypeTest {
 	
@@ -42,6 +43,7 @@ public class MonetaTypeTest {
 		
 		// topic package tests
 		beanTester.testBean(Topic.class);
+		beanTester.testBean(TopicKeyField.class);
 	}
 
 }

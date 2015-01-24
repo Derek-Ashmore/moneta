@@ -52,6 +52,7 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 			RecordResultSetHandler handler = new RecordResultSetHandler();
 			handler.setMaxRows(this.getMaxRows());
 			handler.setStartRow(this.getStartRow());
+			handler.getAliasMap().putAll(topic.getAliasMap());
 			
 			result.setResultData(runner.query(topicConnection, sqlStmt.getSqlText(), 
 					handler, sqlStmt.getHostVariableValueList().toArray()));

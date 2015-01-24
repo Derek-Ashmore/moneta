@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moneta.types.topic.MonetaDataSource;
 import org.moneta.types.topic.Topic;
+import org.moneta.types.topic.TopicKeyField;
 
 public class MonetaConfigurationTest {
 	
@@ -75,6 +76,13 @@ public class MonetaConfigurationTest {
 		
 		Topic topic = config.getTopic("Environment");
 		Assert.assertTrue(topic != null);
+		Assert.assertTrue(topic.getAliasMap().size() == 3);
+		Assert.assertTrue(topic.getAliasMap().containsKey("TABLE_CAT"));
+		
+		TopicKeyField keyField = new TopicKeyField();
+		keyField.setColumnName("TABLE_CAT");
+		keyField.setDataType(TopicKeyField.DataType.STRING);
+		Assert.assertTrue(topic.getKeyFieldList().size() == 3);
 		
 		MonetaDataSource source = config.getMonetaDataSource("InMemoryDb");
 		Assert.assertTrue(source != null);

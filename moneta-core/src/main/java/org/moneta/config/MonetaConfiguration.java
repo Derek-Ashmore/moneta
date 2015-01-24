@@ -32,6 +32,7 @@ import org.moneta.error.MonetaException;
 import org.moneta.types.topic.Dialect;
 import org.moneta.types.topic.MonetaDataSource;
 import org.moneta.types.topic.Topic;
+import org.moneta.types.topic.TopicKeyField;
 
 /**
  * Utility class to find and establish Moneta application configuration
@@ -163,23 +164,86 @@ public class MonetaConfiguration {
 		String readOnlyStr;
 		for (int i = 0; i < nbrTopics; i++) {
 			topic = new Topic();
-			topic.setTopicName(config.getString("Topics.Topic(" + i + ")[@name]"));
-			topic.setDataSourceName(config.getString("Topics.Topic(" + i + ")[@dataSource]"));
-			topic.setSchemaName(config.getString("Topics.Topic(" + i + ")[@schema]"));
-			topic.setCatalogName(config.getString("Topics.Topic(" + i + ")[@catalog]"));
-			topic.setTableName(config.getString("Topics.Topic(" + i + ")[@table]"));
-			
-			readOnlyStr = config.getString("Topics.Topic(" + i + ")[@readOnly]");
-			Boolean bValue = BooleanUtils.toBooleanObject(readOnlyStr);
-			if (bValue != null)  {
-				topic.setReadOnly(bValue);
-			}
+			gatherTopicAttributes(config, topic, i);
+			gatherAliasAttributes(config, topic);
+			gatherKeyFields(config, topic);
 			
 			validateTopic(topic);			
 			topicMap.put(topic.getTopicName(), topic);
 		}
 		
 		Validate.isTrue(topicMap.size() > 0, "No Topics configured.");	
+	}
+	
+	protected void gatherAliasAttributes(XMLConfiguration config, Topic topic) {
+		int nbrAliases = 0;
+		Object temp = config.getList("Topics.Topic.Alias[@name]");
+		if (temp instanceof Collection) {
+			nbrAliases = ((Collection)temp).size();
+		}
+		
+		String name, column;
+		for (int i = 0; i < nbrAliases; i++) {
+			name=config.getString("Topics.Topic.Alias(" + i + ")[@name]");
+			column=config.getString("Topics.Topic.Alias(" + i + ")[@column]");
+			if (StringUtils.isEmpty(name) || StringUtils.isEmpty(column)) {
+				throw new MonetaException("Topic Alias fields must have both name and column specified")
+					.addContextValue("topic", topic.getTopicName())
+					.addContextValue("name", name)
+					.addContextValue("column", column);
+			}
+			topic.getAliasMap().put(column, name);
+		}
+	}
+	
+	protected void gatherKeyFields(XMLConfiguration config, Topic topic) {
+		int nbrKeyFields = 0;
+		Object temp = config.getList("Topics.Topic.PrimaryKey.Field[@name]");
+		if (temp instanceof Collection) {
+			nbrKeyFields = ((Collection)temp).size();
+		}
+		
+		String name, typeStr;
+		TopicKeyField.DataType dataType;
+		TopicKeyField keyField;
+		for (int i = 0; i < nbrKeyFields; i++) {
+			name=config.getString("Topics.Topic.PrimaryKey.Field(" + i + ")[@name]");
+			typeStr=config.getString("Topics.Topic.PrimaryKey.Field(" + i + ")[@type]");
+			if (StringUtils.isEmpty(name) || StringUtils.isEmpty(typeStr)) {
+				throw new MonetaException("Topic Primary Key Fields fields must have both name and type specified")
+					.addContextValue("topic", topic.getTopicName())
+					.addContextValue("name", name)
+					.addContextValue("type", typeStr);
+			}
+			try {dataType = TopicKeyField.DataType.valueOf(typeStr.toUpperCase());}
+			catch (Exception e) {
+				throw new MonetaException("Datatype not supported", e)
+					.addContextValue("topic", topic.getTopicName())
+					.addContextValue("key field", name)
+					.addContextValue("dataType", typeStr);
+			}
+			
+			keyField = new TopicKeyField();
+			topic.getKeyFieldList().add(keyField);
+			keyField.setColumnName(name);
+			keyField.setDataType(dataType);
+		}
+	}
+	
+	protected void gatherTopicAttributes(XMLConfiguration config, Topic topic,
+			int i) {
+		String readOnlyStr;
+		topic.setTopicName(config.getString("Topics.Topic(" + i + ")[@name]"));
+		topic.setDataSourceName(config.getString("Topics.Topic(" + i + ")[@dataSource]"));
+		topic.setSchemaName(config.getString("Topics.Topic(" + i + ")[@schema]"));
+		topic.setCatalogName(config.getString("Topics.Topic(" + i + ")[@catalog]"));
+		topic.setTableName(config.getString("Topics.Topic(" + i + ")[@table]"));
+		
+		readOnlyStr = config.getString("Topics.Topic(" + i + ")[@readOnly]");
+		Boolean bValue = BooleanUtils.toBooleanObject(readOnlyStr);
+		if (bValue != null)  {
+			topic.setReadOnly(bValue);
+		}
 	}
 	protected void validateTopic(Topic topic) {
 		Validate.notEmpty(topic.getTopicName(), "Null or blank Topics.Topic.name not allowed");

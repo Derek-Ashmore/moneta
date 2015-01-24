@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moneta.HSqlTestBase;
 import org.moneta.types.Record;
+import org.moneta.types.Value;
 
 public class RecordResultSetHandlerTest extends HSqlTestBase {
 	
@@ -28,6 +29,7 @@ public class RecordResultSetHandlerTest extends HSqlTestBase {
 	public void setUp() throws Exception {
 		super.setUp();
 		handler = new RecordResultSetHandler();
+		handler.getAliasMap().put("TABLE_CAT", "Catalog");
 	}
 	
 	@Test
@@ -37,6 +39,9 @@ public class RecordResultSetHandlerTest extends HSqlTestBase {
 				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", handler);
 		Assert.assertTrue(recArray != null);
 		Assert.assertTrue(recArray.length == 92);
+		Assert.assertTrue(searchForColumn(recArray, "Catalog"));
+		Assert.assertTrue(!searchForColumn(recArray, "TABLE_CAT"));
+		Assert.assertTrue(searchForColumn(recArray, "TABLE_TYPE"));
 		
 		handler.setStartRow(90L);
 		recArray = runner.query(nativeConnection, 
@@ -50,6 +55,17 @@ public class RecordResultSetHandlerTest extends HSqlTestBase {
 				"select * from INFORMATION_SCHEMA.SYSTEM_TABLES", handler);
 		Assert.assertTrue(recArray != null);
 		Assert.assertTrue(recArray.length == 10);
+	}
+
+	private boolean searchForColumn(Record[] recArray, String testColumn) {
+		boolean testColumnFound=false;
+		for (Value value: recArray[0].getValues()) {
+			if (testColumn.equals(value.getName())) {
+				testColumnFound=true;
+			}
+		}
+		
+		return testColumnFound;
 	}
 
 }

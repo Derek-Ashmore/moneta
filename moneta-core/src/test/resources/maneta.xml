@@ -30,10 +30,13 @@
 	</DataSources>
 	<Topics>
 		<Topic name="Environment" dataSource="InMemoryDb" catalog="PUBLIC" schema="INFORMATION_SCHEMA" table="SYSTEM_TABLES" readOnly="true">
+			<Alias name="Catalog" column="TABLE_CAT"/>
+			<Alias name="Schema" column="TABLE_SCHEM"/>
+			<Alias name="Table" column="TABLE_NAME"/>
 			<PrimaryKey>
-				<Field>TABLE_CAT</Field>
-				<Field>TABLE_SCHEM</Field>
-				<Field>TABLE_NAME</Field>
+				<Field name="TABLE_CAT" type="string"/>
+				<Field name="TABLE_SCHEM" type="string"/>
+				<Field name="TABLE_NAME" type="string"/>
 			</PrimaryKey>
 		</Topic>
 	</Topics>

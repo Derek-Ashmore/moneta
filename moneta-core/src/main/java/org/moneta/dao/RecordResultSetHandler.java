@@ -18,7 +18,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.moneta.types.Record;
 import org.moneta.types.Value;
@@ -27,6 +29,7 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 	
 	private Long maxRows=null;
 	private Long startRow=null;
+	private Map<String,String> aliasMap = new CaseInsensitiveMap<String,String>();
 	
 	public RecordResultSetHandler() {}
 
@@ -41,6 +44,7 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 		}
 		
 		long nbrRows = 0;
+		String columnName;
 		while (rSet.next()) {
 			record = new Record();
 			recordList.add(record);
@@ -48,7 +52,14 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 			valueList = new ArrayList<Value>();
 			for (int columnIndex = 1; columnIndex <= meta.getColumnCount(); columnIndex++) {
 				// TODO Normalize values (e.g. long varchars, etc.
-				valueList.add(new Value(meta.getColumnName(columnIndex), rSet.getObject(columnIndex)));
+				
+				// Alias field impl
+				columnName=meta.getColumnName(columnIndex);
+				if (this.getAliasMap().containsKey(columnName)) {
+					columnName=this.getAliasMap().get(columnName);
+				}
+				
+				valueList.add(new Value(columnName, rSet.getObject(columnIndex)));
 			}
 			record.setValues(valueList.toArray(new Value[0]));
 			
@@ -75,6 +86,10 @@ class RecordResultSetHandler implements ResultSetHandler<Record[]> {
 
 	public void setStartRow(Long startRow) {
 		this.startRow = startRow;
+	}
+
+	public Map<String, String> getAliasMap() {
+		return aliasMap;
 	}
 
 }
