@@ -6,5 +6,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>moneta-core</module>
+  	<module>moneta-web</module>
   </modules>
 </project>
