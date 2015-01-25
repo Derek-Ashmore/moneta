@@ -16,6 +16,8 @@ package org.moneta.types.search;
 import org.moneta.types.BaseType;
 import org.moneta.types.Record;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Contains the results of a topic search;
  * @author D. Ashmore
@@ -25,7 +27,8 @@ public class SearchResult extends BaseType {
 	
 	private Integer errorCode;
 	private String errorMessage;
-	private Long nbrRows;
+
+	@JsonProperty("records")
 	private Record[] resultData;
 	
 	public Integer getErrorCode() {
@@ -44,14 +47,6 @@ public class SearchResult extends BaseType {
 		this.errorMessage = errorMessage;
 	}
 	
-	public Long getNbrRows() {
-		return nbrRows;
-	}
-	
-	public void setNbrRows(Long nbrRows) {
-		this.nbrRows = nbrRows;
-	}
-
 	public Record[] getResultData() {
 		return resultData;
 	}

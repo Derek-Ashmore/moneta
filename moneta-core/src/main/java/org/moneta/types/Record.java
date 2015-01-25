@@ -13,6 +13,8 @@
  */
 package org.moneta.types;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a record of search result data.
  * @author D. Ashmore
@@ -20,6 +22,7 @@ package org.moneta.types;
  */
 public class Record extends BaseType {
 	
+	@JsonProperty("record")
 	private Value[] values;
 
 	public Value[] getValues() {

@@ -86,7 +86,7 @@ public class DefaultSqlGeneratorTest {
 		
 		System.out.println(generator.generateSelect(topic, compositeCriteria, fieldNames));
 		SqlStatement stmt = generator.generateSelect(topic, compositeCriteria, fieldNames);
-		Assert.assertTrue("select col1,col2,col3 from myCatalog.mySchema.myTable where  and myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
+		Assert.assertTrue("select col1,col2,col3 from myCatalog.mySchema.myTable where myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
 		Assert.assertTrue(stmt.getHostVariableValueList().size()==4);
 		Assert.assertTrue("fu".equals(stmt.getHostVariableValueList().get(0)));
 		Assert.assertTrue("bar".equals(stmt.getHostVariableValueList().get(1)));
@@ -147,7 +147,7 @@ public class DefaultSqlGeneratorTest {
 		compositeCriteria.setSearchCriteria(new Criteria[]{fCrit1,fCrit2,cCrit2});
 		System.out.println(generator.generateWhereClause(compositeCriteria));
 		stmt = generator.generateWhereClause(compositeCriteria);
-		Assert.assertTrue("where  and myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
+		Assert.assertTrue("where myCol1 =? and myCol2 =? and (myCol1 =? or myCol2 =?)".equals(stmt.getSqlText()));
 		Assert.assertTrue(stmt.getHostVariableValueList().size()==4);
 		Assert.assertTrue("fu".equals(stmt.getHostVariableValueList().get(0)));
 		Assert.assertTrue("bar".equals(stmt.getHostVariableValueList().get(1)));

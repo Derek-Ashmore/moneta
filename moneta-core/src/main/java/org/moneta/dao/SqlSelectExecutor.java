@@ -56,9 +56,11 @@ class SqlSelectExecutor implements Callable<SearchResult> {
 			
 			result.setResultData(runner.query(topicConnection, sqlStmt.getSqlText(), 
 					handler, sqlStmt.getHostVariableValueList().toArray()));
-			result.setNbrRows(Long.valueOf(result.getResultData().length));
 			
 			if (topicConnection.getAutoCommit()) {
+				DbUtils.closeQuietly(topicConnection);
+			}
+			else {
 				DbUtils.commitAndCloseQuietly(topicConnection);
 			}
 		}

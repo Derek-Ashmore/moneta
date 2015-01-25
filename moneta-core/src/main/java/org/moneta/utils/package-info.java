@@ -11,36 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.moneta.types.topic;
-
-import org.moneta.types.BaseType;
-
 /**
- * Represents a key field for a topic
  * @author D. Ashmore
  *
  */
-public class TopicKeyField extends BaseType {
-	
-	public static enum DataType {NUMBER, STRING};
-	
-	private String columnName;
-	private DataType dataType;
-	
-	public String getColumnName() {
-		return columnName;
-	}
-	
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
-	}
-	
-	public DataType getDataType() {
-		return dataType;
-	}
-	
-	public void setDataType(DataType dataType) {
-		this.dataType = dataType;
-	}
-
-}
+package org.moneta.utils;

@@ -13,20 +13,7 @@
  */
 package org.moneta.dao;
 
-import java.sql.Connection;
-
-import org.apache.commons.lang3.Validate;
-import org.moneta.config.MonetaEnvironment;
-import org.moneta.types.topic.Topic;
 
 abstract class BaseDAO {
-	
-	protected Connection getTopicConnection(String topicName) {
-		Validate.notEmpty(topicName, "Null or blank search topic not allowed.");
-		Topic topic = MonetaEnvironment.getConfiguration().getTopic(topicName);
-		Validate.notNull(topic, "topic not found.    topic=" + topicName);
-		
-		return MonetaEnvironment.getConfiguration().getConnection(topic.getDataSourceName());
-	}
 
 }

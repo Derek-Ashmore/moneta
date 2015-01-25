@@ -73,7 +73,7 @@ public class DefaultSqlGenerator implements SqlGenerator {
 			return new SqlStatement("");
 		}
 		SqlStatement sqlStatement = new SqlStatement();
-		StringBuilder builder = new StringBuilder("where ");
+		StringBuilder builder = new StringBuilder();
 		
 		for (Criteria criteria : searchCriteria.getSearchCriteria()) {
 			if (builder.length() == 0) {
@@ -82,9 +82,9 @@ public class DefaultSqlGenerator implements SqlGenerator {
 			else {
 				builder.append(" ");
 				builder.append(searchCriteria.getOperator().toString().toLowerCase());
-				builder.append(" ");
-				appendCriteria(builder, criteria, sqlStatement.getHostVariableValueList());
+				builder.append(" ");				
 			}
+			appendCriteria(builder, criteria, sqlStatement.getHostVariableValueList());
 		}
 		sqlStatement.setSqlText(builder.toString());
 

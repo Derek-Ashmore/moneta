@@ -28,32 +28,5 @@ public class Moneta {
 		return new MonetaSearchDAO().find(request);
 	}
 	
-//	private SearchResult createDummySearchResult() {
-//		SearchResult result = new SearchResult();
-//		
-//		Long nbrRecords = 2L;
-//		Integer nbrValues = 5;
-//		
-//		result.setErrorCode(0);
-//		result.setNbrRows(nbrRecords);
-//		
-//		Record[] record = new Record[nbrRecords.intValue()];
-//		result.setResultData(record);
-//		Value[] value = null;
-//		for (int i = 0; i < nbrRecords; i++) {
-//			record[i] = new Record();
-//			value = new Value[nbrValues];
-//			record[i].setValues(value);
-//			
-//			for (int j = 0; j < nbrValues; j++) {
-//				value[j] = new Value();
-//				value[j].setName("field" + j);
-//				value[j].setValue(Integer.valueOf(j));
-//			}
-//		}
-//		
-//		return result;
-//	}
-
 
 }
