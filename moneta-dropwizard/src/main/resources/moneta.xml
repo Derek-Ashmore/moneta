@@ -1,0 +1,43 @@
+<ManetaConfiguration>
+	<DataSources>
+		<DataSource name="InMemoryDb" url="jdbc:hsqldb:mem:my-sample" dialect="ansi" driver="org.hsqldb.jdbc.JDBCDriver">
+			<ConnectionProperties>
+				<Property name="user" value="SA"/>
+				<Property name="password" value=""/>
+				<Property name="create" value="true"/>
+			</ConnectionProperties>
+			<PoolProperties>
+				<Property name="defaultAutoCommit" value="false"/>
+				<Property name="defaultTransactionIsolation" value="2"/>
+				<Property name="defaultCatalog" value="PUBLIC"/>
+				<Property name="cacheState" value="false"/>
+				
+				<Property name="maxTotal" value="5"/>				
+				<Property name="minIdle" value="1"/>
+				<Property name="maxWaitMillis" value="-1"/>
+				
+				<Property name="validationQuery" value="SELECT CURRENT_DATE AS today, CURRENT_TIME AS now FROM (VALUES(0))"/>
+				<Property name="testOnBorrow" value="true"/>
+				<Property name="testOnCreate" value="false"/>
+				<Property name="testOnReturn" value="false"/>
+				<Property name="testWhileIdle" value="false"/>
+				
+				<Property name="lifo" value="true"/>
+				<Property name="poolStatements" value="false"/>
+				<Property name="maxOpenPrepatedStatements" value="-1"/>
+			</PoolProperties>
+		</DataSource>
+	</DataSources>
+	<Topics>
+		<Topic name="Environment" dataSource="InMemoryDb" catalog="PUBLIC" schema="INFORMATION_SCHEMA" table="SYSTEM_TABLES" readOnly="true">
+			<Alias name="Catalog" column="TABLE_CAT"/>
+			<Alias name="Schema" column="TABLE_SCHEM"/>
+			<Alias name="Table" column="TABLE_NAME"/>
+			<PrimaryKey>
+				<Field name="TABLE_CAT" type="string"/>
+				<Field name="TABLE_SCHEM" type="string"/>
+				<Field name="TABLE_NAME" type="string"/>
+			</PrimaryKey>
+		</Topic>
+	</Topics>
+</ManetaConfiguration>

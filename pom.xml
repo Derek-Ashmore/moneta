@@ -7,5 +7,6 @@
   <modules>
   	<module>moneta-core</module>
   	<module>moneta-web</module>
+  	<module>moneta-dropwizard</module>
   </modules>
 </project>
