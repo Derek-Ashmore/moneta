@@ -8,5 +8,6 @@
   	<module>moneta-core</module>
   	<module>moneta-web</module>
   	<module>moneta-dropwizard</module>
+  	<module>moneta-springboot</module>
   </modules>
 </project>
