@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.moneta.MonetaServlet;
+import org.moneta.config.MonetaEnvironment;
 import org.moneta.error.MonetaException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +36,8 @@ public class MonetaSpringMvcSpecification {
 		} catch (Exception e) {
 			throw new MonetaException("Error initializing MonetaServlet");
 		}
+		
+		MonetaEnvironment.getConfiguration().setIgnoredContextPathNodes(new String[]{"moneta"});
 	}
 	
 	@RequestMapping(value = "/*", method = RequestMethod.GET)

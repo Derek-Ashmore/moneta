@@ -48,6 +48,7 @@ public class MonetaConfiguration {
 	private final Map<String,ObjectPool<PoolableConnection>> connectionPoolMap = new HashMap<String,ObjectPool<PoolableConnection>>();
 	private final Map<String,Topic> topicMap = new HashMap<String,Topic>();
 	private boolean initRun = false;
+	private String[] ignoredContextPathNodes=null;
 	
 	public MonetaConfiguration() {
 		init(findConfiguration());
@@ -299,6 +300,12 @@ public class MonetaConfiguration {
 		Validate.notEmpty(sourceName, "Null or blank sourceName not allowed");
 		Validate.isTrue(this.initRun, "Moneta not properly initialized.");
 		return dataSourceMap.get(sourceName);
+	}
+	public String[] getIgnoredContextPathNodes() {
+		return ignoredContextPathNodes;
+	}
+	public void setIgnoredContextPathNodes(String[] ignoredContextPathNodes) {
+		this.ignoredContextPathNodes = ignoredContextPathNodes;
 	}
 	
 

@@ -13,9 +13,13 @@
  */
 package org.moneta;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.moneta.config.MonetaEnvironment;
 import org.moneta.types.search.CompositeCriteria;
 import org.moneta.types.search.Criteria;
 import org.moneta.types.search.FilterCriteria;
@@ -81,6 +85,21 @@ public class SearchRequestFactoryTest extends MonetaTestBase {
 		Assert.assertTrue(exceptionThrown != null);
 		Assert.assertTrue(exceptionThrown.getMessage() != null);
 		Assert.assertTrue(exceptionThrown.getMessage().contains(testMessage));
+	}
+	
+	@Test
+	public void testDeriveSearachNodes() throws Exception {
+		request.setUri("/myapp", "/Environment/one/two/three");
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+				StringUtils.split("/Environment/one/two/three", '/')));
+		
+		request.setUri("", "/moneta/Environment");
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+				StringUtils.split("/moneta/Environment", '/')));
+		
+		MonetaEnvironment.getConfiguration().setIgnoredContextPathNodes(new String[]{"moneta"});
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+				StringUtils.split("/Environment", '/')));
 	}
 
 }

@@ -29,9 +29,11 @@ import org.moneta.types.topic.TopicKeyField;
 class SearchRequestFactory {
 	
 	public SearchRequest deriveSearchRequest(HttpServletRequest request) {
-		String[] uriNodes = StringUtils.split(request.getPathInfo(), '/');
+		String[] uriNodes = deriveSearachNodes(request);
 		if (ArrayUtils.isEmpty(uriNodes) )  {
 			throw new MonetaException("Search topic not provided in request uri")
+				.addContextValue("request path info", request.getPathInfo())
+				.addContextValue("request context path", request.getContextPath())
 				.addContextValue("request uri", request.getRequestURI());
 		}
 		SearchRequest searchRequest = new SearchRequest();
@@ -57,7 +59,8 @@ class SearchRequestFactory {
 				throw new MonetaException("Search key in request uri not configured for topic")
 				.addContextValue("search key", uriNodes[pathParamOffset])
 				.addContextValue("topic", searchRequest.getTopic())
-				.addContextValue("request uri", request.getPathInfo())
+				.addContextValue("request path info", request.getPathInfo())
+				.addContextValue("request context path", request.getContextPath())
 				.addContextValue("request uri", request.getRequestURI());
 			}
 			
@@ -79,6 +82,26 @@ class SearchRequestFactory {
 		// TODO Put in logic for detecting search criteria 
 
 		return searchRequest;
+	}
+
+	protected String[] deriveSearachNodes(HttpServletRequest request) {
+		String searchUri;
+		if (request.getContextPath() != null) {
+			searchUri = request.getRequestURI().substring(request.getContextPath().length());
+		}
+		else {
+			searchUri = request.getRequestURI();
+		}
+		String[] nodes= StringUtils.split(searchUri, '/');
+		
+		if (nodes != null && nodes.length > 0 && 
+				MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes() != null) {
+			while (ArrayUtils.contains(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes(), nodes[0])) {
+				nodes=(String[])ArrayUtils.remove(nodes, 0);
+			}
+		}
+		
+		return nodes;
 	}
 
 }
