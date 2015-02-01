@@ -28,11 +28,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.moneta.error.MonetaException;
+import org.moneta.healthcheck.DbcpConnectionPoolHealthCheck;
 import org.moneta.types.topic.Dialect;
 import org.moneta.types.topic.MonetaDataSource;
 import org.moneta.types.topic.Topic;
 import org.moneta.types.topic.TopicKeyField;
+
+import com.codahale.metrics.health.HealthCheckRegistry;
 
 /**
  * Utility class to find and establish Moneta application configuration
@@ -49,6 +53,7 @@ public class MonetaConfiguration {
 	private final Map<String,Topic> topicMap = new HashMap<String,Topic>();
 	private boolean initRun = false;
 	private String[] ignoredContextPathNodes=null;
+	private final HealthCheckRegistry healthChecks = new HealthCheckRegistry();
 	
 	public MonetaConfiguration() {
 		init(findConfiguration());
@@ -151,8 +156,12 @@ public class MonetaConfiguration {
 				dataSourceType.setDialect(dialect);
 			}
 			
+			GenericObjectPool<PoolableConnection> connectionPool = (GenericObjectPool<PoolableConnection>)
+					ConnectionPoolFactory.createConnectionPool(dataSourceType);
+			healthChecks.register("Data source "+dataSourceType.getDataSourceName(), 
+					new DbcpConnectionPoolHealthCheck(connectionPool, dataSourceType.getDataSourceName()));
 			connectionPoolMap.put(dataSourceType.getDataSourceName(), 
-					ConnectionPoolFactory.createConnectionPool(dataSourceType));
+					connectionPool);
 			dataSourceMap.put(dataSourceType.getDataSourceName(), dataSourceType);
 
 		}
