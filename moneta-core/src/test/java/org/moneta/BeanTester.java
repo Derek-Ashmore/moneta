@@ -193,6 +193,10 @@ public class BeanTester {
             Assert.assertTrue("Cloneable test on class " + bean.getClass().getName() + " did not pass"
                     , MethodUtils.invokeMethod(bean, "clone", null) != null);
         }
+        if (bean instanceof Comparable) {
+        	Assert.assertTrue("Comparable test on class " + bean.getClass().getName() + " did not pass"
+                    , MethodUtils.invokeMethod(bean, "compareTo", bean).equals(0));
+        }
     }
     
     private void performValueTest(Object bean,
