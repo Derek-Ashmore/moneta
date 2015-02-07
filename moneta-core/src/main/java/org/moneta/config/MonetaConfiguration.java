@@ -37,6 +37,7 @@ import org.moneta.types.topic.Topic;
 import org.moneta.types.topic.TopicKeyField;
 
 import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
 
 /**
  * Utility class to find and establish Moneta application configuration
@@ -110,6 +111,7 @@ public class MonetaConfiguration {
 				
 		initDataSources(config);
 		initTopics(config);
+		healthChecks.register("Deadlock", new ThreadDeadlockHealthCheck());
 		initRun = true;
 	}
 	
