@@ -15,43 +15,34 @@ package org.moneta;
 
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.moneta.config.MonetaConfiguration;
-import org.moneta.config.MonetaEnvironment;
-import org.moneta.error.MonetaException;
-import org.moneta.types.search.SearchRequest;
 import org.moneta.types.search.SearchResult;
 import org.moneta.utils.ServletUtils;
 
 /**
- * Handles all Moneta web requests 
+ * List information about configured topics for Moneta
  * @author D. Ashmore
  *
  */
-public class MonetaServlet extends HttpServlet {
+public class MonetaTopicListServlet extends HttpServlet {
 
-	public static final String CONFIG_IGNORED_CONTEXT_PATH_NODES = "ignoredContextPathNodes";
-	private static final long serialVersionUID = 2139138787842502094L;
-
+	private static final long serialVersionUID = 4405159464697763008L;
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Implement security check
-				
-		SearchRequest searchRequest = null;
+		
 		SearchResult searchResult = null;
 		response.setContentType("text/json");
 		
 		try{
-			searchRequest=new SearchRequestFactory().deriveSearchRequest(request);
-			searchResult = new Moneta().find(searchRequest);
+			searchResult = new Moneta().findAllTopics();
 			ServletUtils.writeResult(searchResult, response.getOutputStream());
 		}
 		catch (Exception e) {
@@ -60,24 +51,6 @@ public class MonetaServlet extends HttpServlet {
 		}
 						
 		IOUtils.closeQuietly(response.getOutputStream());
-	}
-	
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		
-		MonetaEnvironment.setConfiguration(new MonetaConfiguration());
-		if (config == null)  return;
-		
-		String IgnoredContextPathNodesStr = config.getInitParameter(CONFIG_IGNORED_CONTEXT_PATH_NODES);
-		if ( !StringUtils.isEmpty(IgnoredContextPathNodesStr)) {
-			
-			String[] nodeArray = StringUtils.split(IgnoredContextPathNodesStr, ",");
-			for (int offset=0; offset < nodeArray.length; offset++) {
-				nodeArray[offset] = nodeArray[offset].trim();
-			}
-			MonetaEnvironment.getConfiguration().setIgnoredContextPathNodes(nodeArray);
-		}
 	}
 
 }

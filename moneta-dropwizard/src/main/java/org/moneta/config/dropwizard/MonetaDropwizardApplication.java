@@ -16,7 +16,10 @@ package org.moneta.config.dropwizard;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.BaseHolder.Source;
 import org.moneta.MonetaServlet;
+import org.moneta.MonetaTopicListServlet;
 
 /**
  * Dropwizard configuration for Moneta
@@ -33,7 +36,20 @@ public class MonetaDropwizardApplication extends
 	@Override
 	public void run(MonetaDropwizardConfiguration configuration,
 			Environment environment) throws Exception {
-		environment.getApplicationContext().addServlet(MonetaServlet.class, "/moneta/*");
+		
+		/*
+		 * The ServletHolder allows you to specify init parameters and other servlet configuration 
+		 * itmes in the web.xml.  Setting the order means that the servlet is initialized
+		 * on startup; by default it is not.
+		 */
+		ServletHolder holder = new ServletHolder(Source.EMBEDDED);
+        holder.setHeldClass(MonetaServlet.class);
+        holder.setInitOrder(0);
+        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta");
+        environment.getApplicationContext().getServletHandler().addServletWithMapping(holder,"/moneta/*");
+
+        //  Will be initialized on first use by deftault.
+		environment.getApplicationContext().addServlet(MonetaTopicListServlet.class, "/moneta/topics/*");
 
 	}
 

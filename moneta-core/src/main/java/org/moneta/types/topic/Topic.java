@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.moneta.types.BaseType;
 
 /**
@@ -25,7 +26,7 @@ import org.moneta.types.BaseType;
  * @author D. Ashmore
  *
  */
-public class Topic extends BaseType {
+public class Topic extends BaseType implements Comparable<Topic> {
 	
 	private String topicName;
 	private String dataSourceName;
@@ -91,6 +92,12 @@ public class Topic extends BaseType {
 
 	public List<TopicKeyField> getKeyFieldList() {
 		return keyFieldList;
+	}
+
+	public int compareTo(Topic other) {
+		return new CompareToBuilder()
+			.append(this.topicName, other.getTopicName())
+			.toComparison();
 	}
 
 }

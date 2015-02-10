@@ -13,12 +13,10 @@
  */
 package org.moneta;
 
-import java.io.ByteArrayOutputStream;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.moneta.error.MonetaException;
+import org.moneta.config.MonetaEnvironment;
 
 public class MonetaServletTest extends MonetaTestBase {
 	
@@ -32,6 +30,27 @@ public class MonetaServletTest extends MonetaTestBase {
 		servlet = new MonetaServlet();
 		request = new MockRequest();
 		response = new MockResponse();
+	}
+	
+	@Test
+	public void testInit() throws Exception {
+		MockServletConfig config = new MockServletConfig();
+		
+		servlet.init(config);		
+		Assert.assertTrue(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes()==null);
+		
+		config.getInitParmMap().put(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "");
+		servlet.init(config);		
+		Assert.assertTrue(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes()==null);
+		
+		config.getInitParmMap().put(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "fart,,,");
+		servlet.init(config);		
+		Assert.assertTrue(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes().length==1);
+		
+		config.getInitParmMap().put(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "first , second, third ");
+		servlet.init(config);		
+		Assert.assertTrue(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes().length==3);
+		Assert.assertTrue("third".equals(MonetaEnvironment.getConfiguration().getIgnoredContextPathNodes()[2]));
 	}
 
 	@Test
@@ -59,32 +78,7 @@ public class MonetaServletTest extends MonetaTestBase {
 		testResponse("ADMINISTRABLE_ROLE_AUTHORIZATIONS");
 //		System.out.println(response.getMockServletOutputStream().asString());
 	}
-	
-	@Test
-	public void testWriteResult() throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
-		Throwable exceptionThrown = null;
-		try {servlet.writeResult(null, out);}
-		catch (Exception e) {
-			exceptionThrown=e;
-		}
-		Assert.assertTrue(exceptionThrown != null);
-		Assert.assertTrue(exceptionThrown.getMessage() != null);
-	}
-	
-	@Test
-	public void testWriteError() throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Exception error = new MonetaException("Outer exception message", new IllegalArgumentException("Inner exception message"))
-			.addContextValue("context", "contextValue");
-		servlet.writeError(427, error, out);
-		
-		Assert.assertTrue(out.toString().contains("Outer exception message"));
-		Assert.assertTrue(out.toString().contains("Inner exception message"));
-		Assert.assertTrue(out.toString().contains("contextValue"));
-	}
-	
 	private void testResponse(String testMessage) {
 		Throwable exceptionThrown=null;
 		response = new MockResponse();

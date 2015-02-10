@@ -38,5 +38,14 @@ public class MonetaTest extends MonetaTestBase {
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(result.getResultData().length == 92);
 	}
+	
+	@Test
+	public void testFindAllTopics() throws Exception {
+		SearchResult result = moneta.findAllTopics();
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(result.getResultData().length == 1);
+		Assert.assertTrue(result.getResultData()[0].getValues() != null);
+		Assert.assertTrue(result.getResultData()[0].getValues().length == 5);
+	}
 
 }

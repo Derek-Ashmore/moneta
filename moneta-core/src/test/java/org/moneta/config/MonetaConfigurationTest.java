@@ -79,6 +79,12 @@ public class MonetaConfigurationTest {
 	}
 	
 	@Test
+	public void testGetTopicList() throws Exception {
+		MonetaConfiguration config = new MonetaConfiguration(new FileInputStream(testFile.getAbsolutePath()));
+		Assert.assertTrue(config.getTopicList().size() == 1);
+	}
+	
+	@Test
 	public void testStreamConstructor() throws Exception {
 		MonetaConfiguration config = new MonetaConfiguration(new FileInputStream(testFile.getAbsolutePath()));
 		Connection conn = config.getConnection("InMemoryDb");

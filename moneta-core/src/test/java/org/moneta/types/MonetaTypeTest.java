@@ -13,6 +13,9 @@
  */
 package org.moneta.types;
 
+
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.moneta.BeanTester;
@@ -44,6 +47,18 @@ public class MonetaTypeTest {
 		// topic package tests
 		beanTester.testBean(Topic.class);
 		beanTester.testBean(TopicKeyField.class);
+	}
+	
+	@Test
+	public void testTopicCompare() throws Exception {
+		Topic t1 = new Topic();
+		Topic t2 = new Topic();
+		
+		Assert.assertTrue(t1.compareTo(t2) == 0);
+		t1.setTopicName("a");
+		Assert.assertTrue(t1.compareTo(t2) > 0);
+		t2.setTopicName("b");
+		Assert.assertTrue(t1.compareTo(t2) < 0);
 	}
 
 }

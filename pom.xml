@@ -9,5 +9,6 @@
   	<module>moneta-web</module>
   	<module>moneta-dropwizard</module>
   	<module>moneta-springboot</module>
+  	<module>moneta-contract-tests</module>
   </modules>
 </project>

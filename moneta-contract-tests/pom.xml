@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>moneta</groupId>
+		<artifactId>moneta</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>moneta-contract-tests</groupId>
+	<artifactId>moneta-contract-tests</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>moneta-dropwizard</groupId>
+			<artifactId>moneta-dropwizard</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.6</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

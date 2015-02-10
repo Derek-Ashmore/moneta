@@ -16,9 +16,12 @@ package org.moneta.config;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -305,6 +308,10 @@ public class MonetaConfiguration {
 		Validate.notEmpty(topicName, "Null or blank topicName not allowed");
 		Validate.isTrue(this.initRun, "Moneta not properly initialized.");
 		return topicMap.get(topicName);
+	}
+	
+	public List<Topic> getTopicList() {
+		return new ArrayList<Topic>(new TreeSet<Topic>(topicMap.values()));
 	}
 	
 	public MonetaDataSource getMonetaDataSource(String sourceName) {
