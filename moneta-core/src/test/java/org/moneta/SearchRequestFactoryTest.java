@@ -69,6 +69,26 @@ public class SearchRequestFactoryTest extends MonetaTestBase {
 		searchRequest = factory.deriveSearchRequest(request);
 		Assert.assertTrue(searchRequest != null);
 		Assert.assertTrue("Environment".equals(searchRequest.getTopic()));
+		
+		request.setUri("/myapp", "/Environments/one");
+		request.getParameterMap().put(RequestConstants.PARM_START_ROW, "2");
+		searchRequest = factory.deriveSearchRequest(request);
+		Assert.assertTrue(searchRequest != null);
+		Assert.assertTrue(searchRequest.getStartRow().equals(2L));
+		
+		request.getParameterMap().put(RequestConstants.PARM_START_ROW, "invalid");
+		testException("Invalid start row request parm");
+		request.getParameterMap().remove(RequestConstants.PARM_START_ROW);
+		
+		request.setUri("/myapp", "/Environments/one");
+		request.getParameterMap().put(RequestConstants.PARM_MAX_ROWS, "2");
+		searchRequest = factory.deriveSearchRequest(request);
+		Assert.assertTrue(searchRequest != null);
+		Assert.assertTrue(searchRequest.getMaxRows().equals(2L));
+		
+		request.getParameterMap().put(RequestConstants.PARM_MAX_ROWS, "invalid");
+		testException("Invalid max rows request parm");
+		request.getParameterMap().remove(RequestConstants.PARM_MAX_ROWS);
 
 	}
 	

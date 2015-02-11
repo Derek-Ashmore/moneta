@@ -40,10 +40,10 @@ class SearchRequestFactory {
 		
 		String topicRequested=uriNodes[0];
 		Topic searchTopic = MonetaEnvironment.getConfiguration().getTopic(topicRequested);
-		if (searchTopic==null) {
+		if (searchTopic == null) {
 			searchTopic = MonetaEnvironment.getConfiguration().findByPlural(topicRequested);
 		}
-		if (searchTopic==null) {
+		if (searchTopic == null) {
 			throw new MonetaException("Topic not configured")
 			.addContextValue("topic", topicRequested);
 		}
@@ -58,7 +58,23 @@ class SearchRequestFactory {
 		TopicKeyField keyField = null;
 		
 		// TODO put in logic for request parms startRow, maxRows, and returnFields
+		String parmStr=request.getParameter(RequestConstants.PARM_START_ROW);
+		if (StringUtils.isNotEmpty(parmStr)) {
+			try{searchRequest.setStartRow(Long.valueOf(parmStr));}
+			catch (Exception e) {
+				throw new MonetaException("Invalid start row request parm", e)
+					.addContextValue(RequestConstants.PARM_START_ROW, parmStr);
+			}
+		}
 		
+		parmStr=request.getParameter(RequestConstants.PARM_MAX_ROWS);
+		if (StringUtils.isNotEmpty(parmStr)) {
+			try{searchRequest.setMaxRows(Long.valueOf(parmStr));}
+			catch (Exception e) {
+				throw new MonetaException("Invalid max rows request parm", e)
+					.addContextValue(RequestConstants.PARM_MAX_ROWS, parmStr);
+			}
+		}
 		
 		
 		for (int pathParamOffset = 1; pathParamOffset < uriNodes.length; pathParamOffset++) {
