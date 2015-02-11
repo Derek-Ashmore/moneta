@@ -113,6 +113,8 @@ public class MonetaConfigurationTest {
 		testValidate(config, topic, "table");
 		topic.setDataSourceName(null);
 		testValidate(config, topic, "dataSource");
+		topic.setPluralName(null);
+		testValidate(config, topic, "pluralName");
 		topic.setTopicName(null);
 		testValidate(config, topic, "name");
 	}

@@ -55,6 +55,7 @@ public class MonetaConfiguration {
 	private final Map<String,MonetaDataSource> dataSourceMap = new HashMap<String,MonetaDataSource>();
 	private final Map<String,ObjectPool<PoolableConnection>> connectionPoolMap = new HashMap<String,ObjectPool<PoolableConnection>>();
 	private final Map<String,Topic> topicMap = new HashMap<String,Topic>();
+	private final Map<String,Topic> pluralNameMap = new HashMap<String,Topic>();
 	private boolean initRun = false;
 	private String[] ignoredContextPathNodes=null;
 	private final HealthCheckRegistry healthChecks = new HealthCheckRegistry();
@@ -189,6 +190,7 @@ public class MonetaConfiguration {
 			
 			validateTopic(topic);			
 			topicMap.put(topic.getTopicName(), topic);
+			pluralNameMap.put(topic.getPluralName(), topic);
 		}
 		
 		Validate.isTrue(topicMap.size() > 0, "No Topics configured.");	
@@ -253,6 +255,7 @@ public class MonetaConfiguration {
 			int i) {
 		String readOnlyStr;
 		topic.setTopicName(config.getString("Topics.Topic(" + i + ")[@name]"));
+		topic.setPluralName(config.getString("Topics.Topic(" + i + ")[@pluralName]"));
 		topic.setDataSourceName(config.getString("Topics.Topic(" + i + ")[@dataSource]"));
 		topic.setSchemaName(config.getString("Topics.Topic(" + i + ")[@schema]"));
 		topic.setCatalogName(config.getString("Topics.Topic(" + i + ")[@catalog]"));
@@ -266,6 +269,7 @@ public class MonetaConfiguration {
 	}
 	protected void validateTopic(Topic topic) {
 		Validate.notEmpty(topic.getTopicName(), "Null or blank Topics.Topic.name not allowed");
+		Validate.notEmpty(topic.getPluralName(), "Null or blank Topics.Topic.pluralName not allowed");
 		Validate.notEmpty(topic.getDataSourceName(), "Null or blank Topics.Topic.dataSource not allowed.  topic="+topic.getTopicName());
 		Validate.notEmpty(topic.getTableName(), "Null or blank Topics.Topic.table not allowed.  topic="+topic.getTopicName());
 		Validate.notNull(topic.getReadOnly(), "Null or blank Topics.Topic.readOnly not allowed.  topic="+topic.getTopicName());
@@ -308,6 +312,12 @@ public class MonetaConfiguration {
 		Validate.notEmpty(topicName, "Null or blank topicName not allowed");
 		Validate.isTrue(this.initRun, "Moneta not properly initialized.");
 		return topicMap.get(topicName);
+	}
+	
+	public Topic findByPlural(String pluralTopicName) {
+		Validate.notEmpty(pluralTopicName, "Null or blank pluralTopicName not allowed");
+		Validate.isTrue(this.initRun, "Moneta not properly initialized.");
+		return pluralNameMap.get(pluralTopicName);
 	}
 	
 	public List<Topic> getTopicList() {

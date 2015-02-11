@@ -29,6 +29,7 @@ import org.moneta.types.BaseType;
 public class Topic extends BaseType implements Comparable<Topic> {
 	
 	private String topicName;
+	private String pluralName;
 	private String dataSourceName;
 	private String schemaName;
 	private String catalogName;
@@ -98,6 +99,14 @@ public class Topic extends BaseType implements Comparable<Topic> {
 		return new CompareToBuilder()
 			.append(this.topicName, other.getTopicName())
 			.toComparison();
+	}
+
+	public String getPluralName() {
+		return pluralName;
+	}
+
+	public void setPluralName(String pluralName) {
+		this.pluralName = pluralName;
 	}
 
 }

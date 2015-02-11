@@ -45,8 +45,8 @@ public class MonetaDropwizardApplication extends
 		ServletHolder holder = new ServletHolder(Source.EMBEDDED);
         holder.setHeldClass(MonetaServlet.class);
         holder.setInitOrder(0);
-        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta");
-        environment.getApplicationContext().getServletHandler().addServletWithMapping(holder,"/moneta/*");
+        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
+        environment.getApplicationContext().getServletHandler().addServletWithMapping(holder,"/moneta/topic/*");
 
         //  Will be initialized on first use by deftault.
 		environment.getApplicationContext().addServlet(MonetaTopicListServlet.class, "/moneta/topics/*");

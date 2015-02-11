@@ -29,15 +29,26 @@ import org.moneta.types.topic.TopicKeyField;
 class SearchRequestFactory {
 	
 	public SearchRequest deriveSearchRequest(HttpServletRequest request) {
-		String[] uriNodes = deriveSearachNodes(request);
+		String[] uriNodes = deriveSearchNodes(request);
 		if (ArrayUtils.isEmpty(uriNodes) )  {
 			throw new MonetaException("Search topic not provided in request uri")
 				.addContextValue("request path info", request.getPathInfo())
 				.addContextValue("request context path", request.getContextPath())
 				.addContextValue("request uri", request.getRequestURI());
 		}
-		SearchRequest searchRequest = new SearchRequest();
-		searchRequest.setTopic(uriNodes[0]);
+		SearchRequest searchRequest = new SearchRequest();	
+		
+		String topicRequested=uriNodes[0];
+		Topic searchTopic = MonetaEnvironment.getConfiguration().getTopic(topicRequested);
+		if (searchTopic==null) {
+			searchTopic = MonetaEnvironment.getConfiguration().findByPlural(topicRequested);
+		}
+		if (searchTopic==null) {
+			throw new MonetaException("Topic not configured")
+			.addContextValue("topic", topicRequested);
+		}
+		searchRequest.setTopic(searchTopic.getTopicName());
+		
 		CompositeCriteria baseCriteria = new CompositeCriteria();
 		searchRequest.setSearchCriteria(baseCriteria);
 		
@@ -48,11 +59,7 @@ class SearchRequestFactory {
 		
 		// TODO put in logic for request parms startRow, maxRows, and returnFields
 		
-		Topic searchTopic = MonetaEnvironment.getConfiguration().getTopic(searchRequest.getTopic());
-		if (searchTopic==null) {
-			throw new MonetaException("Topic not configured")
-			.addContextValue("topic", searchRequest.getTopic());
-		}
+		
 		
 		for (int pathParamOffset = 1; pathParamOffset < uriNodes.length; pathParamOffset++) {
 			if (searchTopic.getKeyFieldList().size() < pathParamOffset) {
@@ -84,7 +91,7 @@ class SearchRequestFactory {
 		return searchRequest;
 	}
 
-	protected String[] deriveSearachNodes(HttpServletRequest request) {
+	protected String[] deriveSearchNodes(HttpServletRequest request) {
 		String searchUri;
 		if (request.getContextPath() != null) {
 			searchUri = request.getRequestURI().substring(request.getContextPath().length());

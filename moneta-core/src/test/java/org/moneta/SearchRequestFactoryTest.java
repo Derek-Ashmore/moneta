@@ -64,6 +64,11 @@ public class SearchRequestFactoryTest extends MonetaTestBase {
 		testCriteria(searchCriteria.getSearchCriteria()[0], "TABLE_CAT", FilterCriteria.Operation.EQUAL, "one");
 		testCriteria(searchCriteria.getSearchCriteria()[1], "TABLE_SCHEM", FilterCriteria.Operation.EQUAL, "two");
 		testCriteria(searchCriteria.getSearchCriteria()[2], "TABLE_NAME", FilterCriteria.Operation.EQUAL, "three");
+		
+		request.setUri("/myapp", "/Environments/one");
+		searchRequest = factory.deriveSearchRequest(request);
+		Assert.assertTrue(searchRequest != null);
+		Assert.assertTrue("Environment".equals(searchRequest.getTopic()));
 
 	}
 	
@@ -90,15 +95,15 @@ public class SearchRequestFactoryTest extends MonetaTestBase {
 	@Test
 	public void testDeriveSearachNodes() throws Exception {
 		request.setUri("/myapp", "/Environment/one/two/three");
-		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearchNodes(request), 
 				StringUtils.split("/Environment/one/two/three", '/')));
 		
 		request.setUri("", "/moneta/Environment");
-		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearchNodes(request), 
 				StringUtils.split("/moneta/Environment", '/')));
 		
 		MonetaEnvironment.getConfiguration().setIgnoredContextPathNodes(new String[]{"moneta"});
-		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearachNodes(request), 
+		Assert.assertTrue(Arrays.deepEquals(factory.deriveSearchNodes(request), 
 				StringUtils.split("/Environment", '/')));
 	}
 

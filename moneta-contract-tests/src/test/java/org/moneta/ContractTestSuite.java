@@ -42,7 +42,11 @@ public class ContractTestSuite {
 	}
 	
 	public void testEnvironmentBasic() throws Exception {
-		HttpResponse response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"Environment");
+		HttpResponse response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environment");
+		System.out.println(IOUtils.toString(response.getEntity().getContent()));
+		Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
+		
+		response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environments");
 		System.out.println(IOUtils.toString(response.getEntity().getContent()));
 		Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
 	}
