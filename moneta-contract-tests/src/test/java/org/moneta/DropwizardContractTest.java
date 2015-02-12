@@ -20,18 +20,24 @@ import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
-public class DropwizardContractTest {
+/**
+ * Tests the dropwizard deployment.  All tests are inherited.
+ * @author D. Ashmore
+ *
+ */
+public class DropwizardContractTest extends ContractTestSuite {
 	
 	static Executor executor;
 	static ExecuteWatchdog  watchdog;
 	static DefaultExecuteResultHandler resultHandler;
 	ContractTestSuite testSuite;
+	
+	public DropwizardContractTest() {
+		super("http://localhost:8080/moneta/");
+	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -58,22 +64,6 @@ public class DropwizardContractTest {
 	public static void tearDownAfterClass() throws Exception {
 		watchdog.destroyProcess();
 		System.out.println("Test sequence ending.");
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		testSuite=new ContractTestSuite("http://localhost:8080/moneta/");
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-	
-	@Test
-	public void runTests() throws Exception {
-		
-		testSuite.testTopicsBasic();
-		testSuite.testEnvironmentBasic();
 	}
 
 }
