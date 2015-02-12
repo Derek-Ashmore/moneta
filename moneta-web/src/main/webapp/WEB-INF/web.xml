@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
-<web-app 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="admin4j-sample" 
-	version="2.5">
-	
- 	<display-name>Moneta Application</display-name>
-	
+	id="admin4j-sample" version="2.5">
+
+	<display-name>Moneta Application</display-name>
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
@@ -16,12 +13,26 @@
 	<servlet>
 		<servlet-name>Moneta Servlet</servlet-name>
 		<servlet-class>org.moneta.MonetaServlet</servlet-class>
-	 	<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>ignoredContextPathNodes</param-name>
+			<param-value>moneta,topic</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>	
 	</servlet>
 	
+	<servlet>
+		<servlet-name>Moneta Topic List Servlet</servlet-name>
+		<servlet-class>org.moneta.MonetaTopicListServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>Moneta Servlet</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/topic/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Moneta Topic List Servlet</servlet-name>
+		<url-pattern>/topics/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
