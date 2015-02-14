@@ -33,7 +33,6 @@ public class DropwizardContractTest extends ContractTestSuite {
 	static Executor executor;
 	static ExecuteWatchdog  watchdog;
 	static DefaultExecuteResultHandler resultHandler;
-	ContractTestSuite testSuite;
 	
 	public DropwizardContractTest() {
 		super("http://localhost:8080/moneta/");
