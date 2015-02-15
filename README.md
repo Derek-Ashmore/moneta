@@ -1,6 +1,8 @@
 # Moneta
 Moneta is a microservice that provides a RESTful web service interface to a relational database.  This project is intended as a *sample* that illustrates a microservice written using Java EE.
 
+For those who are curious, *Moneta* is a greek goddess of memory.
+
 ## Features
 * Provides generic ‘core’ services
 * Returns Json-formatted data
