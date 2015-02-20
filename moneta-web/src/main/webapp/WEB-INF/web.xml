@@ -10,6 +10,13 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<listener>
+		<listener-class>org.moneta.config.web.MetricsContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.moneta.config.web.HealthCheckContextListener</listener-class>
+	</listener>
+
 	<servlet>
 		<servlet-name>Moneta Servlet</servlet-name>
 		<servlet-class>org.moneta.MonetaServlet</servlet-class>
@@ -17,13 +24,18 @@
 			<param-name>ignoredContextPathNodes</param-name>
 			<param-value>moneta,topic</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>	
+		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>Moneta Topic List Servlet</servlet-name>
 		<servlet-class>org.moneta.MonetaTopicListServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>metrics</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -33,6 +45,10 @@
 	<servlet-mapping>
 		<servlet-name>Moneta Topic List Servlet</servlet-name>
 		<url-pattern>/topics/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>metrics</servlet-name>
+		<url-pattern>/metrics/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

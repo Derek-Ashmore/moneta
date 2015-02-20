@@ -35,7 +35,9 @@ public class DropwizardContractTest extends ContractTestSuite {
 	static DefaultExecuteResultHandler resultHandler;
 	
 	public DropwizardContractTest() {
-		super("http://localhost:8080/moneta/");
+		super("http://localhost:8080/moneta/", 
+				"http://localhost:8081/",
+				"healthcheck");
 	}
 
 	@BeforeClass

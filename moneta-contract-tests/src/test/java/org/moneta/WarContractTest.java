@@ -23,7 +23,9 @@ public class WarContractTest extends ContractTestSuite {
 	private static Server server;
 	
 	public WarContractTest() {
-		super("http://localhost:8080/moneta/");
+		super("http://localhost:8080/moneta/", 
+				"http://localhost:8080/moneta/metrics/",
+				"healthcheck");
 	}
 
 	@BeforeClass

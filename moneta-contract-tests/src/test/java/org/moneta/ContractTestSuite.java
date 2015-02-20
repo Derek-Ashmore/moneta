@@ -26,41 +26,55 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class ContractTestSuite {
 	
-	private String urlPrefix;
+	private String appUrlPrefix;
+	private String serviceUrlPrefix;
+	private String healthCheckEndpoint;
 	private SearchResult result;
 	private String jsonContent;
 	
-	public ContractTestSuite(String urlPrefix) {
-		this.setUrlPrefix(urlPrefix);
+	public ContractTestSuite(String appUrlPrefix, String servicePrefix, String healthCheckEndpoint) {
+		this.setAppUrlPrefix(appUrlPrefix);
+		this.setServiceUrlPrefix(servicePrefix);
+		this.setHealthCheckEndpoint(healthCheckEndpoint);
 	}
 
-	public String getUrlPrefix() {
-		return urlPrefix;
+	public String getAppUrlPrefix() {
+		return appUrlPrefix;
 	}
 
-	public void setUrlPrefix(String urlPrefix) {
-		this.urlPrefix = urlPrefix;
+	public void setAppUrlPrefix(String urlPrefix) {
+		this.appUrlPrefix = urlPrefix;
 	}
 	
 	@Test
 	public void testTopicsBasic() throws Exception {
-		HttpResponse response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topics");
+		HttpResponse response = RestTestingUtils.simpleRESTGet(this.appUrlPrefix+"topics");
 		this.testForOkResult(response, 1, 5);
 	}
 	
 	@Test
 	public void testEnvironmentBasic() throws Exception {
-		HttpResponse response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environment");
+		HttpResponse response = RestTestingUtils.simpleRESTGet(this.appUrlPrefix+"topic/Environment");
 		this.testForOkResult(response, 92, 13);
 		
-		response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environments");
+		response = RestTestingUtils.simpleRESTGet(this.appUrlPrefix+"topic/Environments");
 		this.testForOkResult(response, 92, 13);
 		
-		response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environments?startRow=90");
+		response = RestTestingUtils.simpleRESTGet(this.appUrlPrefix+"topic/Environments?startRow=90");
 		this.testForOkResult(response, 3, 13);
 		
-		response = RestTestingUtils.simpleRESTGet(this.urlPrefix+"topic/Environments?maxRows=10");
+		response = RestTestingUtils.simpleRESTGet(this.appUrlPrefix+"topic/Environments?maxRows=10");
 		this.testForOkResult(response, 10, 13);
+	}
+	
+	@Test
+	public void testHealthcheck() throws Exception {
+		String checkUrl = this.serviceUrlPrefix+this.getHealthCheckEndpoint();
+		System.out.println("Healthcheck url: " +checkUrl);
+		HttpResponse response = RestTestingUtils.simpleRESTGet(checkUrl);
+		Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
+		
+		System.out.println("Healthcheck output: " +IOUtils.toString(response.getEntity().getContent()));
 	}
 	
 	private void testForOkResult(HttpResponse response, int nbrReturnedRecords, int nbrReturnedValues) throws Exception {
@@ -79,6 +93,22 @@ public abstract class ContractTestSuite {
 	private SearchResult toSearchResult(String jsonContent) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(jsonContent, SearchResult.class);
+	}
+
+	public String getServiceUrlPrefix() {
+		return serviceUrlPrefix;
+	}
+
+	public void setServiceUrlPrefix(String servicePrefix) {
+		this.serviceUrlPrefix = servicePrefix;
+	}
+
+	public String getHealthCheckEndpoint() {
+		return healthCheckEndpoint;
+	}
+
+	public void setHealthCheckEndpoint(String healthCheckEndpoint) {
+		this.healthCheckEndpoint = healthCheckEndpoint;
 	}
 
 }

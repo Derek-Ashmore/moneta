@@ -39,7 +39,7 @@ import org.moneta.types.topic.MonetaDataSource;
 import org.moneta.types.topic.Topic;
 import org.moneta.types.topic.TopicKeyField;
 
-import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
 
 
@@ -60,7 +60,7 @@ public class MonetaConfiguration {
 	private final Map<String,Topic> pluralNameMap = new HashMap<String,Topic>();
 	private boolean initRun = false;
 	private String[] ignoredContextPathNodes=null;
-	private final HealthCheckRegistry healthChecks = new HealthCheckRegistry();
+	private final Map<String,HealthCheck> healthChecks = new HashMap<String,HealthCheck>();
 	
 	public MonetaConfiguration() {
 		init(findConfiguration());
@@ -117,7 +117,7 @@ public class MonetaConfiguration {
 				
 		initDataSources(config);
 		initTopics(config);
-		healthChecks.register("Deadlock", new ThreadDeadlockHealthCheck());
+		healthChecks.put("Deadlock", new ThreadDeadlockHealthCheck());
 		initRun = true;
 	}
 	
@@ -166,7 +166,7 @@ public class MonetaConfiguration {
 			
 			GenericObjectPool<PoolableConnection> connectionPool = (GenericObjectPool<PoolableConnection>)
 					ConnectionPoolFactory.createConnectionPool(dataSourceType);
-			healthChecks.register("Data source "+dataSourceType.getDataSourceName(), 
+			healthChecks.put("Data source "+dataSourceType.getDataSourceName(), 
 					new DbcpConnectionPoolHealthCheck(connectionPool, dataSourceType.getDataSourceName()));
 			connectionPoolMap.put(dataSourceType.getDataSourceName(), 
 					connectionPool);
@@ -331,11 +331,17 @@ public class MonetaConfiguration {
 		Validate.isTrue(this.initRun, "Moneta not properly initialized.");
 		return dataSourceMap.get(sourceName);
 	}
+	
 	public String[] getIgnoredContextPathNodes() {
 		return ignoredContextPathNodes;
 	}
+	
 	public void setIgnoredContextPathNodes(String[] ignoredContextPathNodes) {
 		this.ignoredContextPathNodes = ignoredContextPathNodes;
+	}
+	
+	public Map<String, HealthCheck> getHealthChecks() {
+		return healthChecks;
 	}
 	
 

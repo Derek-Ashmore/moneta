@@ -16,10 +16,11 @@ package org.moneta.config.dropwizard;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.BaseHolder.Source;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
+import org.moneta.config.MonetaConfiguration;
 
 /**
  * Dropwizard configuration for Moneta
@@ -45,11 +46,21 @@ public class MonetaDropwizardApplication extends
 		ServletHolder holder = new ServletHolder(Source.EMBEDDED);
         holder.setHeldClass(MonetaServlet.class);
         holder.setInitOrder(0);
-        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
-        environment.getApplicationContext().getServletHandler().addServletWithMapping(holder,"/moneta/topic/*");
+        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, 
+        		"moneta,topic");
+        environment.getApplicationContext()
+        	.getServletHandler()
+        	.addServletWithMapping(holder,"/moneta/topic/*");
 
-        //  Will be initialized on first use by deftault.
-		environment.getApplicationContext().addServlet(MonetaTopicListServlet.class, "/moneta/topics/*");
+        //  Will be initialized on first use by default.
+		environment.getApplicationContext().addServlet(
+				MonetaTopicListServlet.class, "/moneta/topics/*");
+		
+		MonetaConfiguration config = new MonetaConfiguration();
+		for (String checkName: config.getHealthChecks().keySet()) {
+			environment.healthChecks().register(checkName, config.getHealthChecks().get(checkName));
+		}
+		
 
 	}
 

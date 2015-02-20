@@ -37,7 +37,9 @@ public class SpringBootContractTest extends ContractTestSuite {
 	static Thread appThread;
 	
 	public SpringBootContractTest() {
-		super("http://localhost:8080/moneta/");
+		super("http://localhost:8080/moneta/",
+				"http://localhost:8080/",
+				"health");
 	}
 
 	@BeforeClass

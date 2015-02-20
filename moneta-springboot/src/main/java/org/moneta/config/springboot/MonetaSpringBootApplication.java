@@ -15,6 +15,8 @@ package org.moneta.config.springboot;
 
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
+import org.moneta.config.MonetaConfiguration;
+import org.moneta.config.MonetaEnvironment;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
@@ -23,6 +25,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import com.codahale.metrics.health.HealthCheckRegistry;
 
 /**
  * Spring boot application for Moneta
@@ -35,24 +39,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	
-	public MonetaSpringBootApplication() {
-		super();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(MonetaSpringBootApplication.class, args);
+		
+		MonetaConfiguration config = new MonetaConfiguration();
+		HealthCheckRegistry registry = new HealthCheckRegistry();
+		for (String checkName: MonetaEnvironment.getConfiguration().getHealthChecks().keySet()) {
+			registry.register(checkName, MonetaEnvironment.getConfiguration().getHealthChecks().get(checkName));
+		}
+		ActuatorHealthIndicator.setHealthCheckRegistry(registry);
 	}
 	
 	@Bean
 	public ServletRegistrationBean monetaServlet() {
-	    ServletRegistrationBean registration = new ServletRegistrationBean(new MonetaServlet(), "/moneta/topic/*"); 
-	    registration.addInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
+	    ServletRegistrationBean registration = 
+	    		new ServletRegistrationBean(new MonetaServlet(),
+	    				"/moneta/topic/*"); 
+	    registration.addInitParameter(
+	    		MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
 	    return registration;
 	}
 	
 	@Bean
 	public ServletRegistrationBean monetaTopicListServlet() {
-	    ServletRegistrationBean registration = new ServletRegistrationBean(new MonetaTopicListServlet(), "/moneta/topics/*"); 
+	    ServletRegistrationBean registration = 
+	    		new ServletRegistrationBean(new MonetaTopicListServlet(), 
+	    				"/moneta/topics/*"); 
 	    return registration;
 	}
 
