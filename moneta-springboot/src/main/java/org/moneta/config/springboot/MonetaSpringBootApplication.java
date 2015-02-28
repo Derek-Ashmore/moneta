@@ -13,12 +13,14 @@
  */
 package org.moneta.config.springboot;
 
+import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
 import org.moneta.config.MonetaEnvironment;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import com.codahale.metrics.JmxReporter;
+import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
 
 /**
@@ -48,6 +52,10 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 			registry.register(checkName, MonetaEnvironment.getConfiguration().getHealthChecks().get(checkName));
 		}
 		ActuatorHealthIndicator.setHealthCheckRegistry(registry);
+		
+		MetricRegistry metricRegistry = new MetricRegistry();
+		final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
+		jmxReporter.start();
 	}
 	
 	@Bean
@@ -66,6 +74,14 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	    		new ServletRegistrationBean(new MonetaTopicListServlet(), 
 	    				"/moneta/topics/*"); 
 	    return registration;
+	}
+	
+	@Bean
+	public FilterRegistrationBean monetaPerformanceFilter() {
+		FilterRegistrationBean registration = 
+				new FilterRegistrationBean(new MonetaPerformanceFilter(), 
+						monetaServlet(), monetaTopicListServlet());
+		return registration;
 	}
 
 }

@@ -39,14 +39,7 @@ class SearchRequestFactory {
 		SearchRequest searchRequest = new SearchRequest();	
 		
 		String topicRequested=uriNodes[0];
-		Topic searchTopic = MonetaEnvironment.getConfiguration().getTopic(topicRequested);
-		if (searchTopic == null) {
-			searchTopic = MonetaEnvironment.getConfiguration().findByPlural(topicRequested);
-		}
-		if (searchTopic == null) {
-			throw new MonetaException("Topic not configured")
-			.addContextValue("topic", topicRequested);
-		}
+		Topic searchTopic = findSearchTopic(topicRequested);
 		searchRequest.setTopic(searchTopic.getTopicName());
 		
 		CompositeCriteria baseCriteria = new CompositeCriteria();
@@ -105,6 +98,22 @@ class SearchRequestFactory {
 		// TODO Put in logic for detecting search criteria 
 
 		return searchRequest;
+	}
+	
+	protected Topic findSearchTopic(String topicRequested) {
+		return findSearchTopic(topicRequested, true);
+	}
+
+	protected Topic findSearchTopic(String topicRequested, boolean exceptOnNull) {
+		Topic searchTopic = MonetaEnvironment.getConfiguration().getTopic(topicRequested);
+		if (searchTopic == null) {
+			searchTopic = MonetaEnvironment.getConfiguration().findByPlural(topicRequested);
+		}
+		if (exceptOnNull && searchTopic == null) {
+			throw new MonetaException("Topic not configured")
+			.addContextValue("topic", topicRequested);
+		}
+		return searchTopic;
 	}
 
 	protected String[] deriveSearchNodes(HttpServletRequest request) {

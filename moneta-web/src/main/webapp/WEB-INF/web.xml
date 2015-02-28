@@ -17,6 +17,16 @@
 		<listener-class>org.moneta.config.web.HealthCheckContextListener</listener-class>
 	</listener>
 
+	<filter>
+		<filter-name>performanceFilter</filter-name>
+		<filter-class>org.moneta.MonetaPerformanceFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>performanceFilter</filter-name>
+		<url-pattern>/moneta/*</url-pattern>
+	</filter-mapping>
+
 	<servlet>
 		<servlet-name>Moneta Servlet</servlet-name>
 		<servlet-class>org.moneta.MonetaServlet</servlet-class>

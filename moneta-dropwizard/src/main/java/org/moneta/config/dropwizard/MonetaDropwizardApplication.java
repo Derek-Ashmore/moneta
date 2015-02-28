@@ -17,10 +17,15 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
 import org.eclipse.jetty.servlet.BaseHolder.Source;
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlet.Holder;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
+
+import com.codahale.metrics.JmxReporter;
 
 /**
  * Dropwizard configuration for Moneta
@@ -56,12 +61,22 @@ public class MonetaDropwizardApplication extends
 		environment.getApplicationContext().addServlet(
 				MonetaTopicListServlet.class, "/moneta/topics/*");
 		
+		/*
+		 * Install the performance filter
+		 */
+		FilterHolder filterHolder = new FilterHolder(Holder.Source.EMBEDDED);
+		filterHolder.setHeldClass(MonetaPerformanceFilter.class);
+		filterHolder.setInitParameter(MonetaPerformanceFilter.PARM_MAX_TRNASACTION_TIME_THRESHOLD_IN_MILLIS, "3000");
+		environment.getApplicationContext().addFilter(filterHolder, 
+				"/moneta/*", null);
+		
 		MonetaConfiguration config = new MonetaConfiguration();
 		for (String checkName: config.getHealthChecks().keySet()) {
 			environment.healthChecks().register(checkName, config.getHealthChecks().get(checkName));
 		}
 		
-
+		final JmxReporter jmxReporter = JmxReporter.forRegistry(environment.metrics()).build();
+		jmxReporter.start();
 	}
 
 }
