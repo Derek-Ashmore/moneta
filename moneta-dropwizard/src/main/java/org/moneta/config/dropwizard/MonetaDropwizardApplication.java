@@ -24,6 +24,10 @@ import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
+import org.slf4j.LoggerFactory;
+import org.force66.correlate.RequestCorrelationFilter;
+
+import ch.qos.logback.classic.Logger;
 
 import com.codahale.metrics.JmxReporter;
 
@@ -64,12 +68,19 @@ public class MonetaDropwizardApplication extends
 		/*
 		 * Install the performance filter
 		 */
-		FilterHolder filterHolder = new FilterHolder(Holder.Source.EMBEDDED);
-		filterHolder.setHeldClass(MonetaPerformanceFilter.class);
-		filterHolder.setInitParameter(MonetaPerformanceFilter.PARM_MAX_TRNASACTION_TIME_THRESHOLD_IN_MILLIS, "3000");
-		environment.getApplicationContext().addFilter(filterHolder, 
+		FilterHolder perfFilterHolder = new FilterHolder(Holder.Source.EMBEDDED);
+		perfFilterHolder.setHeldClass(MonetaPerformanceFilter.class);
+		perfFilterHolder.setInitParameter(MonetaPerformanceFilter.PARM_MAX_TRNASACTION_TIME_THRESHOLD_IN_MILLIS, "3000");
+		environment.getApplicationContext().addFilter(perfFilterHolder, 
 				"/moneta/*", null);
 		
+		/*
+		 * Install RequestCorrelation filter so I can get a correlation id in the logs
+		 */
+		FilterHolder correlationFilterHolder = new FilterHolder(Holder.Source.EMBEDDED);
+		correlationFilterHolder.setHeldClass(RequestCorrelationFilter.class);
+		
+		// Install healthchecks
 		MonetaConfiguration config = new MonetaConfiguration();
 		for (String checkName: config.getHealthChecks().keySet()) {
 			environment.healthChecks().register(checkName, config.getHealthChecks().get(checkName));

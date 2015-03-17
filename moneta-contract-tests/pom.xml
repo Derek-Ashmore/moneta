@@ -2,27 +2,26 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>moneta</groupId>
+		<groupId>org.force66</groupId>
 		<artifactId>moneta</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${project.version}</version>
 	</parent>
-	<groupId>moneta-contract-tests</groupId>
 	<artifactId>moneta-contract-tests</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>moneta-dropwizard</groupId>
+			<groupId>org.force66</groupId>
 			<artifactId>moneta-dropwizard</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>moneta-springboot</groupId>
+			<groupId>org.force66</groupId>
 			<artifactId>moneta-springboot</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>moneta-web</groupId>
+			<groupId>org.force66</groupId>
 			<artifactId>moneta-web</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>

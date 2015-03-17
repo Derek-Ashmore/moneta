@@ -42,6 +42,8 @@ public class DropwizardContractTest extends ContractTestSuite {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		System.out.println("Java Temp Dir: " +System.getProperty("java.io.tmpdir"));
+		
 		executor = new DefaultExecutor();
 		resultHandler = new DefaultExecuteResultHandler();
 		String javaHome = System.getProperty("java.home");
@@ -56,7 +58,8 @@ public class DropwizardContractTest extends ContractTestSuite {
 				+ "bin"+ SystemUtils.FILE_SEPARATOR+"java.exe")
 			.addArgument("-jar")
 			.addArgument(userDir + "/../moneta-dropwizard/target/moneta-dropwizard-0.0.1-SNAPSHOT.jar")
-			.addArgument("server"), resultHandler);
+			.addArgument("server")
+			.addArgument("src/main/resources/dropwizard/moneta-dropwizard.yaml"), resultHandler);
 		Thread.sleep(3000);
 		System.out.println("Test sequence starting....");
 	}

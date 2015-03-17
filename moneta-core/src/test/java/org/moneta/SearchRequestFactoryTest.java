@@ -16,6 +16,7 @@ package org.moneta;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
+import org.force66.mock.servletapi.MockRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

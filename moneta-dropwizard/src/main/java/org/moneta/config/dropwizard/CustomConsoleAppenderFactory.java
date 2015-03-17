@@ -13,26 +13,10 @@
  */
 package org.moneta.config.dropwizard;
 
-import io.dropwizard.Configuration;
-import io.dropwizard.logging.LoggingFactory;
+import io.dropwizard.logging.ConsoleAppenderFactory;
 
-/**
- * Dropwizard configuration for Moneta
- * @author D. Ashmore
- *
- */
-public class MonetaDropwizardConfiguration extends Configuration {
-
-	@Override
-	public LoggingFactory getLoggingFactory() {
-		// TODO Auto-generated method stub
-		return super.getLoggingFactory();
-	}
-
-	@Override
-	public void setLoggingFactory(LoggingFactory factory) {
-		// TODO Auto-generated method stub
-		super.setLoggingFactory(factory);
-	}
+import com.fasterxml.jackson.annotation.JsonTypeName;
+@JsonTypeName("consoleWithId")
+public class CustomConsoleAppenderFactory extends ConsoleAppenderFactory {
 
 }

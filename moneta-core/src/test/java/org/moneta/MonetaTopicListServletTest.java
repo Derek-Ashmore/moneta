@@ -13,6 +13,8 @@
  */
 package org.moneta;
 
+import org.force66.mock.servletapi.MockRequest;
+import org.force66.mock.servletapi.MockResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

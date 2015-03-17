@@ -2,17 +2,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>moneta</groupId>
+		<groupId>org.force66</groupId>
 		<artifactId>moneta</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${project.version}</version>
 	</parent>
-	<groupId>moneta-springboot</groupId>
 	<artifactId>moneta-springboot</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>moneta-core</groupId>
+			<groupId>org.force66</groupId>
 			<artifactId>moneta-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,6 +55,16 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>
 		</dependency>
+		<dependency>
+			<groupId>org.force66</groupId>
+			<artifactId>RequestCorrelation-core</artifactId>
+			<version>1.0.0-rc2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.force66</groupId>
+			<artifactId>RequestCorrelation-logback</artifactId>
+			<version>1.0.0-rc2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -74,6 +83,30 @@
 						<!-- <id>default-package</id> <phase>clean</phase> -->
 						<goals>
 							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
