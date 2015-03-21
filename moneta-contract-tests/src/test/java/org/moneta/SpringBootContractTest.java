@@ -39,7 +39,8 @@ public class SpringBootContractTest extends ContractTestSuite {
 	public SpringBootContractTest() {
 		super("http://localhost:8080/moneta/",
 				"http://localhost:8080/",
-				"health");
+				"health", 
+				"metrics");
 	}
 
 	@BeforeClass
@@ -75,7 +76,7 @@ public class SpringBootContractTest extends ContractTestSuite {
 			executor.execute(new CommandLine(javaHome + SystemUtils.FILE_SEPARATOR 
 					+ "bin"+ SystemUtils.FILE_SEPARATOR+"java.exe")
 				.addArgument("-jar")
-				.addArgument(userDir + "/../moneta-springboot/target/moneta-springboot-0.0.1-SNAPSHOT.jar"));
+				.addArgument(userDir + "/../moneta-springboot/target/moneta-springboot-" + ContractTestSuite.getProjectVersion() + ".jar"));
 			
 			}
 			catch (Exception e) {

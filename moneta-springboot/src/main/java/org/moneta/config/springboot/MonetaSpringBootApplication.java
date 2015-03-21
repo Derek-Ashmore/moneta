@@ -13,6 +13,10 @@
  */
 package org.moneta.config.springboot;
 
+import net.admin4j.ui.servlets.MemoryMonitorStartupServlet;
+import net.admin4j.ui.servlets.ThreadMonitorStartupServlet;
+
+import org.force66.correlate.RequestCorrelationFilter;
 import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
@@ -77,9 +81,33 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	}
 	
 	@Bean
+	public ServletRegistrationBean threadStartupServlet() {
+	    ServletRegistrationBean registration = 
+	    		new ServletRegistrationBean(new ThreadMonitorStartupServlet(), "/admin4j/threads"); 
+	    registration.setLoadOnStartup(1);
+	    return registration;
+	}
+	
+	@Bean
+	public ServletRegistrationBean memoryMonitorStartupServlet() {
+	    ServletRegistrationBean registration = 
+	    		new ServletRegistrationBean(new MemoryMonitorStartupServlet(), "/admin4j/memory"); 
+	    registration.setLoadOnStartup(1);
+	    return registration;
+	}
+	
+	@Bean
 	public FilterRegistrationBean monetaPerformanceFilter() {
 		FilterRegistrationBean registration = 
 				new FilterRegistrationBean(new MonetaPerformanceFilter(), 
+						monetaServlet(), monetaTopicListServlet());
+		return registration;
+	}
+	
+	@Bean
+	public FilterRegistrationBean reportCorrelationFilter() {
+		FilterRegistrationBean registration = 
+				new FilterRegistrationBean(new RequestCorrelationFilter(), 
 						monetaServlet(), monetaTopicListServlet());
 		return registration;
 	}

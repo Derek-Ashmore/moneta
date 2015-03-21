@@ -25,13 +25,14 @@ public class WarContractTest extends ContractTestSuite {
 	public WarContractTest() {
 		super("http://localhost:8080/moneta/", 
 				"http://localhost:8080/moneta/metrics/",
-				"healthcheck");
+				"healthcheck", 
+				"metrics");
 	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String userDir = System.getProperty("user.dir");
-		String warFileName=userDir + "/../moneta-web/target/moneta-web-0.0.1-SNAPSHOT.war";
+		String warFileName=userDir + "/../moneta-web/target/moneta-web-" + ContractTestSuite.getProjectVersion() + ".war";
 		
 		server = new Server(8080);
         server.setStopAtShutdown(true);

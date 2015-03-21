@@ -14,7 +14,6 @@
 package org.moneta.config.dropwizard;
 
 import io.dropwizard.Configuration;
-import io.dropwizard.logging.LoggingFactory;
 
 /**
  * Dropwizard configuration for Moneta
@@ -22,17 +21,5 @@ import io.dropwizard.logging.LoggingFactory;
  *
  */
 public class MonetaDropwizardConfiguration extends Configuration {
-
-	@Override
-	public LoggingFactory getLoggingFactory() {
-		// TODO Auto-generated method stub
-		return super.getLoggingFactory();
-	}
-
-	@Override
-	public void setLoggingFactory(LoggingFactory factory) {
-		// TODO Auto-generated method stub
-		super.setLoggingFactory(factory);
-	}
-
+	
 }

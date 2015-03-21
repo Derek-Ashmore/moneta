@@ -19,7 +19,7 @@ logging:
     - type: file
       threshold: INFO
       encoder: org.force66.correlate.logback.CorrelationPatternLayoutEncoder
-      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} %id - %X{code} %msg %n"
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} %X{requestId} - %X{code} %msg %n"
       currentLogFilename: ${env.java.io.tmpdir}/application.log
       archivedLogFilenamePattern: ${env.java.io.tmpdir}/application-%d{yyyy-MM-dd}.log
       archivedFileCount: 7

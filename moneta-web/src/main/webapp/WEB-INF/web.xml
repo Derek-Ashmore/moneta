@@ -21,7 +21,15 @@
 		<filter-name>performanceFilter</filter-name>
 		<filter-class>org.moneta.MonetaPerformanceFilter</filter-class>
 	</filter>
+	<filter>
+		<filter-name>correlationIdFilter</filter-name>
+		<filter-class>org.force66.correlate.RequestCorrelationFilter</filter-class>
+	</filter>
 
+	<filter-mapping>
+		<filter-name>correlationIdFilter</filter-name>
+		<url-pattern>/moneta/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>performanceFilter</filter-name>
 		<url-pattern>/moneta/*</url-pattern>
@@ -46,6 +54,18 @@
 	<servlet>
 		<servlet-name>metrics</servlet-name>
 		<servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Thread Monitor Startup Servlet</servlet-name>
+		<servlet-class>net.admin4j.ui.servlets.ThreadMonitorStartupServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Memory Monitor Startup Servlet</servlet-name>
+		<servlet-class>net.admin4j.ui.servlets.MemoryMonitorStartupServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>

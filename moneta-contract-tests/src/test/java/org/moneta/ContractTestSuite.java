@@ -14,6 +14,8 @@
 package org.moneta;
 
 
+import net.admin4j.deps.commons.lang3.Validate;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -29,13 +31,21 @@ public abstract class ContractTestSuite {
 	private String appUrlPrefix;
 	private String serviceUrlPrefix;
 	private String healthCheckEndpoint;
+	private String metricsEndpoint;
 	private SearchResult result;
 	private String jsonContent;
 	
-	public ContractTestSuite(String appUrlPrefix, String servicePrefix, String healthCheckEndpoint) {
+	public ContractTestSuite(String appUrlPrefix, String servicePrefix, String healthCheckEndpoint, String metricsEndpoint) {
 		this.setAppUrlPrefix(appUrlPrefix);
 		this.setServiceUrlPrefix(servicePrefix);
 		this.setHealthCheckEndpoint(healthCheckEndpoint);
+		this.setMetricsEndpoint(metricsEndpoint);
+	}
+	
+	public static String getProjectVersion() {
+		String projectVersion = System.getProperty("projectVersion");
+		Validate.notEmpty(projectVersion, "Environment property projectVersion not set");
+		return projectVersion;
 	}
 
 	public String getAppUrlPrefix() {
@@ -77,6 +87,16 @@ public abstract class ContractTestSuite {
 		System.out.println("Healthcheck output: " +IOUtils.toString(response.getEntity().getContent()));
 	}
 	
+	@Test
+	public void testMetrics() throws Exception {
+		String checkUrl = this.serviceUrlPrefix+this.getMetricsEndpoint();
+		System.out.println("Metrics url: " +checkUrl);
+		HttpResponse response = RestTestingUtils.simpleRESTGet(checkUrl);
+		Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
+		
+		System.out.println("Metrics output: " +IOUtils.toString(response.getEntity().getContent()));
+	}
+	
 	private void testForOkResult(HttpResponse response, int nbrReturnedRecords, int nbrReturnedValues) throws Exception {
 		jsonContent = IOUtils.toString(response.getEntity().getContent());
 		System.out.println(jsonContent);
@@ -109,6 +129,14 @@ public abstract class ContractTestSuite {
 
 	public void setHealthCheckEndpoint(String healthCheckEndpoint) {
 		this.healthCheckEndpoint = healthCheckEndpoint;
+	}
+
+	public String getMetricsEndpoint() {
+		return metricsEndpoint;
+	}
+
+	public void setMetricsEndpoint(String metricsEndpoint) {
+		this.metricsEndpoint = metricsEndpoint;
 	}
 
 }

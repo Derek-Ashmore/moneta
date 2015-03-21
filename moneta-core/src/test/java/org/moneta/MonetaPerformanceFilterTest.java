@@ -116,7 +116,7 @@ public class MonetaPerformanceFilterTest {
 		filter.doFilter(request, response, filterChain);
 		Assert.assertTrue(TaskTimerFactory.getDataSummaryMap().containsKey("Environment"));
 		Assert.assertTrue(stdErrStream.toString().contains("Transaction longer than threshold"));
-		Assert.assertTrue(stdErrStream.toString().contains("12"));
+		Assert.assertTrue(stdErrStream.toString().contains("ElapsedMillis="));
 		
 		System.setErr(stdErr);
 	}

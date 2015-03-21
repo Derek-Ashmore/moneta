@@ -37,7 +37,8 @@ public class DropwizardContractTest extends ContractTestSuite {
 	public DropwizardContractTest() {
 		super("http://localhost:8080/moneta/", 
 				"http://localhost:8081/",
-				"healthcheck");
+				"healthcheck"
+				, "metrics");
 	}
 
 	@BeforeClass
@@ -57,7 +58,7 @@ public class DropwizardContractTest extends ContractTestSuite {
 		executor.execute(new CommandLine(javaHome + SystemUtils.FILE_SEPARATOR 
 				+ "bin"+ SystemUtils.FILE_SEPARATOR+"java.exe")
 			.addArgument("-jar")
-			.addArgument(userDir + "/../moneta-dropwizard/target/moneta-dropwizard-0.0.1-SNAPSHOT.jar")
+			.addArgument(userDir + "/../moneta-dropwizard/target/moneta-dropwizard-" + ContractTestSuite.getProjectVersion() + ".jar")
 			.addArgument("server")
 			.addArgument("src/main/resources/dropwizard/moneta-dropwizard.yaml"), resultHandler);
 		Thread.sleep(3000);

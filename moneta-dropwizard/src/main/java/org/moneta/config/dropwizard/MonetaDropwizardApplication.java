@@ -15,19 +15,18 @@ package org.moneta.config.dropwizard;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
+import net.admin4j.ui.servlets.MemoryMonitorStartupServlet;
+import net.admin4j.ui.servlets.ThreadMonitorStartupServlet;
 
 import org.eclipse.jetty.servlet.BaseHolder.Source;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.Holder;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.force66.correlate.RequestCorrelationFilter;
 import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
-import org.slf4j.LoggerFactory;
-import org.force66.correlate.RequestCorrelationFilter;
-
-import ch.qos.logback.classic.Logger;
 
 import com.codahale.metrics.JmxReporter;
 
@@ -52,18 +51,38 @@ public class MonetaDropwizardApplication extends
 		 * itmes in the web.xml.  Setting the order means that the servlet is initialized
 		 * on startup; by default it is not.
 		 */
-		ServletHolder holder = new ServletHolder(Source.EMBEDDED);
-        holder.setHeldClass(MonetaServlet.class);
-        holder.setInitOrder(0);
-        holder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, 
+		ServletHolder topicHolder = new ServletHolder(Source.EMBEDDED);
+        topicHolder.setHeldClass(MonetaServlet.class);
+        topicHolder.setInitOrder(0);
+        topicHolder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, 
         		"moneta,topic");
         environment.getApplicationContext()
         	.getServletHandler()
-        	.addServletWithMapping(holder,"/moneta/topic/*");
+        	.addServletWithMapping(topicHolder,"/moneta/topic/*");
 
         //  Will be initialized on first use by default.
 		environment.getApplicationContext().addServlet(
 				MonetaTopicListServlet.class, "/moneta/topics/*");
+		
+		/*
+		 * Install thread contention monitoring
+		 */
+		ServletHolder threadContentionHolder = new ServletHolder(Source.EMBEDDED);
+		threadContentionHolder.setHeldClass(ThreadMonitorStartupServlet.class);
+		threadContentionHolder.setInitOrder(0);
+		environment.getApplicationContext()
+	    	.getServletHandler()
+	    	.addServlet(threadContentionHolder);
+		
+		/*
+		 * Install memory alert monitoring
+		 */
+		ServletHolder memoryAlertHolder = new ServletHolder(Source.EMBEDDED);
+		memoryAlertHolder.setHeldClass(MemoryMonitorStartupServlet.class);
+		memoryAlertHolder.setInitOrder(0);
+		environment.getApplicationContext()
+	    	.getServletHandler()
+	    	.addServlet(memoryAlertHolder);
 		
 		/*
 		 * Install the performance filter
