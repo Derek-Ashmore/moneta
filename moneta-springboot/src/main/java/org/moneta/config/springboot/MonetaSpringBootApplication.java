@@ -80,13 +80,16 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	    return registration;
 	}
 	
-	@Bean
-	public ServletRegistrationBean threadStartupServlet() {
-	    ServletRegistrationBean registration = 
-	    		new ServletRegistrationBean(new ThreadMonitorStartupServlet(), "/admin4j/threads"); 
-	    registration.setLoadOnStartup(1);
-	    return registration;
-	}
+	/*
+	 * Withdrawn after issue discovered with jetty
+	 */
+//	@Bean
+//	public ServletRegistrationBean threadStartupServlet() {
+//	    ServletRegistrationBean registration = 
+//	    		new ServletRegistrationBean(new ThreadMonitorStartupServlet(), "/admin4j/threads"); 
+//	    registration.setLoadOnStartup(1);
+//	    return registration;
+//	}
 	
 	@Bean
 	public ServletRegistrationBean memoryMonitorStartupServlet() {

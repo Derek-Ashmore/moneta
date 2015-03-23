@@ -65,14 +65,14 @@ public class MonetaDropwizardApplication extends
 				MonetaTopicListServlet.class, "/moneta/topics/*");
 		
 		/*
-		 * Install thread contention monitoring
+		 * Install thread contention monitoring -- withdrawn after issue with Jetty discovered.
 		 */
-		ServletHolder threadContentionHolder = new ServletHolder(Source.EMBEDDED);
-		threadContentionHolder.setHeldClass(ThreadMonitorStartupServlet.class);
-		threadContentionHolder.setInitOrder(0);
-		environment.getApplicationContext()
-	    	.getServletHandler()
-	    	.addServlet(threadContentionHolder);
+//		ServletHolder threadContentionHolder = new ServletHolder(Source.EMBEDDED);
+//		threadContentionHolder.setHeldClass(ThreadMonitorStartupServlet.class);
+//		threadContentionHolder.setInitOrder(0);
+//		environment.getApplicationContext()
+//	    	.getServletHandler()
+//	    	.addServlet(threadContentionHolder);
 		
 		/*
 		 * Install memory alert monitoring

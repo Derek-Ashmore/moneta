@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="moneta-core-0.9.0-alpha.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/moneta-core/moneta-core">
+        <dependent-module archiveName="moneta-core-0.9.1-alpha.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/moneta-core/moneta-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="moneta-web"/>
