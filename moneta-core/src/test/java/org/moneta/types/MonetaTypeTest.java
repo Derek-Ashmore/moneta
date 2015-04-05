@@ -15,10 +15,10 @@ package org.moneta.types;
 
 
 
+import org.force66.beantester.BeanTester;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.moneta.BeanTester;
 import org.moneta.types.search.CompositeCriteria;
 import org.moneta.types.search.FilterCriteria;
 import org.moneta.types.search.SearchRequest;

@@ -12,7 +12,7 @@
 #
 #		Sample usage:
 #
-#		docker image springboot .
+#		docker build -t springboot .
 #       docker run -d -p 8080:8080 -p 8081:8081 \ 
 #			-v /c/Users/moneta/springboot/config:/config \ 
 #			-v /c/Users/moneta/springboot/logs:/logs \ 

@@ -13,10 +13,9 @@
  */
 package org.moneta.dao.types;
 
+import org.force66.beantester.BeanTester;
 import org.junit.Before;
 import org.junit.Test;
-import org.moneta.BeanTester;
-import org.moneta.dao.types.SqlStatement;
 
 public class DaoTypesTest {
 	

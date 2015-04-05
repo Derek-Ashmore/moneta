@@ -125,6 +125,12 @@
 			<artifactId>admin4j</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.force66</groupId>
+			<artifactId>BeanTester</artifactId>
+			<version>1.0.0-beta.5</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- <dependency> <groupId>com.codahale.metrics</groupId> <artifactId>metrics-core</artifactId> 
 			<version>3.0.2</version> </dependency> <dependency> <groupId>com.codahale.metrics</groupId> 
