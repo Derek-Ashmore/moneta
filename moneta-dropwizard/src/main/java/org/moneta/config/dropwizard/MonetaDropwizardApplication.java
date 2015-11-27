@@ -2,9 +2,9 @@
  * This software is licensed under the Apache License, Version 2.0
  * (the "License") agreement; you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,10 +14,11 @@
 package org.moneta.config.dropwizard;
 
 import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.admin4j.ui.servlets.MemoryMonitorStartupServlet;
-import net.admin4j.ui.servlets.ThreadMonitorStartupServlet;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jetty.servlet.BaseHolder.Source;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.Holder;
@@ -36,44 +37,67 @@ import com.codahale.metrics.JmxReporter;
  *
  */
 public class MonetaDropwizardApplication extends
-		Application<MonetaDropwizardConfiguration> {
-	
+Application<MonetaDropwizardConfiguration> {
+
+	protected static boolean containsConfiguration(String[] args) {
+		for (String arg : args) {
+			if (arg.endsWith(".yaml") || arg.endsWith(".yml")
+					|| arg.endsWith(".json")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static void main(String[] args) throws Exception {
-        new MonetaDropwizardApplication().run(args);
-    }
+		String[] localArgs = args;
+		if (!containsConfiguration(args)) {
+			// Add default config if nothing specified
+			localArgs = (String[]) ArrayUtils.add(args, "/moneta-config.yaml");
+		}
+		new MonetaDropwizardApplication().run(localArgs);
+	}
+
+	@Override
+	public void initialize(Bootstrap<MonetaDropwizardConfiguration> bootstrap) {
+		bootstrap.setConfigurationSourceProvider(new MonetaConfigurationSourceProvider());
+		super.initialize(bootstrap);
+	}
 
 	@Override
 	public void run(MonetaDropwizardConfiguration configuration,
 			Environment environment) throws Exception {
-		
+
 		/*
-		 * The ServletHolder allows you to specify init parameters and other servlet configuration 
-		 * itmes in the web.xml.  Setting the order means that the servlet is initialized
-		 * on startup; by default it is not.
+		 * The ServletHolder allows you to specify init parameters and other
+		 * servlet configuration itmes in the web.xml. Setting the order means
+		 * that the servlet is initialized on startup; by default it is not.
 		 */
 		ServletHolder topicHolder = new ServletHolder(Source.EMBEDDED);
-        topicHolder.setHeldClass(MonetaServlet.class);
-        topicHolder.setInitOrder(0);
-        topicHolder.setInitParameter(MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, 
-        		"moneta,topic");
-        environment.getApplicationContext()
-        	.getServletHandler()
-        	.addServletWithMapping(topicHolder,"/moneta/topic/*");
+		topicHolder.setHeldClass(MonetaServlet.class);
+		topicHolder.setInitOrder(0);
+		topicHolder.setInitParameter(
+				MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
+		environment.getApplicationContext()
+		.getServletHandler()
+		.addServletWithMapping(topicHolder, "/moneta/topic/*");
 
-        //  Will be initialized on first use by default.
-		environment.getApplicationContext().addServlet(
-				MonetaTopicListServlet.class, "/moneta/topics/*");
-		
+		// Will be initialized on first use by default.
+		environment.getApplicationContext()
+		.addServlet(MonetaTopicListServlet.class, "/moneta/topics/*");
+
 		/*
-		 * Install thread contention monitoring -- withdrawn after issue with Jetty discovered.
+		 * Install thread contention monitoring -- withdrawn after issue with
+		 * Jetty discovered.
 		 */
-//		ServletHolder threadContentionHolder = new ServletHolder(Source.EMBEDDED);
-//		threadContentionHolder.setHeldClass(ThreadMonitorStartupServlet.class);
-//		threadContentionHolder.setInitOrder(0);
-//		environment.getApplicationContext()
-//	    	.getServletHandler()
-//	    	.addServlet(threadContentionHolder);
-		
+		// ServletHolder threadContentionHolder = new
+		// ServletHolder(Source.EMBEDDED);
+		// threadContentionHolder.setHeldClass(ThreadMonitorStartupServlet.class);
+		// threadContentionHolder.setInitOrder(0);
+		// environment.getApplicationContext()
+		// .getServletHandler()
+		// .addServlet(threadContentionHolder);
+
 		/*
 		 * Install memory alert monitoring
 		 */
@@ -81,31 +105,40 @@ public class MonetaDropwizardApplication extends
 		memoryAlertHolder.setHeldClass(MemoryMonitorStartupServlet.class);
 		memoryAlertHolder.setInitOrder(0);
 		environment.getApplicationContext()
-	    	.getServletHandler()
-	    	.addServlet(memoryAlertHolder);
-		
+		.getServletHandler()
+		.addServlet(memoryAlertHolder);
+
 		/*
 		 * Install the performance filter
 		 */
 		FilterHolder perfFilterHolder = new FilterHolder(Holder.Source.EMBEDDED);
 		perfFilterHolder.setHeldClass(MonetaPerformanceFilter.class);
-		perfFilterHolder.setInitParameter(MonetaPerformanceFilter.PARM_MAX_TRNASACTION_TIME_THRESHOLD_IN_MILLIS, "3000");
-		environment.getApplicationContext().addFilter(perfFilterHolder, 
-				"/moneta/*", null);
-		
+		perfFilterHolder.setInitParameter(
+				MonetaPerformanceFilter.PARM_MAX_TRNASACTION_TIME_THRESHOLD_IN_MILLIS,
+				"3000");
+		environment.getApplicationContext()
+		.addFilter(perfFilterHolder, "/moneta/*", null);
+
 		/*
-		 * Install RequestCorrelation filter so I can get a correlation id in the logs
+		 * Install RequestCorrelation filter so I can get a correlation id in
+		 * the logs
 		 */
-		FilterHolder correlationFilterHolder = new FilterHolder(Holder.Source.EMBEDDED);
+		FilterHolder correlationFilterHolder = new FilterHolder(
+				Holder.Source.EMBEDDED);
 		correlationFilterHolder.setHeldClass(RequestCorrelationFilter.class);
-		
+
 		// Install healthchecks
 		MonetaConfiguration config = new MonetaConfiguration();
-		for (String checkName: config.getHealthChecks().keySet()) {
-			environment.healthChecks().register(checkName, config.getHealthChecks().get(checkName));
+		for (String checkName : config.getHealthChecks()
+				.keySet()) {
+			environment.healthChecks()
+			.register(checkName, config.getHealthChecks()
+					.get(checkName));
 		}
-		
-		final JmxReporter jmxReporter = JmxReporter.forRegistry(environment.metrics()).build();
+
+		final JmxReporter jmxReporter = JmxReporter.forRegistry(
+				environment.metrics())
+				.build();
 		jmxReporter.start();
 	}
 

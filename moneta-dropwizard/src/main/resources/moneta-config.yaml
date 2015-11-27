@@ -1,0 +1,21 @@
+# Yaml Configuration for Moneta (dropwizard deployment)
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  #loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    #com.example.app: DEBUG
+
+    #org.hibernate.SQL: ALL
+
+  appenders:
+    - type: console
+      threshold: INFO
+      #encoder: org.force66.correlate.logback.CorrelationPatternLayoutEncoder
+      logFormat: "%d{HH:mm:ss.SSS} [${HOSTNAME}] [%thread] %-5level %logger{36} REQUEST_ID=%X{requestId} - %msg%n"
