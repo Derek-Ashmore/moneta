@@ -2,9 +2,9 @@
  * This software is licensed under the Apache License, Version 2.0
  * (the "License") agreement; you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +14,6 @@
 package org.moneta.config.springboot;
 
 import net.admin4j.ui.servlets.MemoryMonitorStartupServlet;
-import net.admin4j.ui.servlets.ThreadMonitorStartupServlet;
 
 import org.force66.correlate.RequestCorrelationFilter;
 import org.moneta.MonetaPerformanceFilter;
@@ -46,71 +45,75 @@ import com.codahale.metrics.health.HealthCheckRegistry;
 @ComponentScan("org.moneta")
 @Component
 public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(MonetaSpringBootApplication.class, args);
-		
+
+		// Find and read application configuration
 		MonetaConfiguration config = new MonetaConfiguration();
+
+		// Install all health checks
 		HealthCheckRegistry registry = new HealthCheckRegistry();
 		for (String checkName: MonetaEnvironment.getConfiguration().getHealthChecks().keySet()) {
 			registry.register(checkName, MonetaEnvironment.getConfiguration().getHealthChecks().get(checkName));
 		}
 		ActuatorHealthIndicator.setHealthCheckRegistry(registry);
-		
+
+		// Install metrics and JMX
 		MetricRegistry metricRegistry = new MetricRegistry();
 		final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
 		jmxReporter.start();
 	}
-	
-	@Bean
-	public ServletRegistrationBean monetaServlet() {
-	    ServletRegistrationBean registration = 
-	    		new ServletRegistrationBean(new MonetaServlet(),
-	    				"/moneta/topic/*"); 
-	    registration.addInitParameter(
-	    		MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
-	    return registration;
-	}
-	
-	@Bean
-	public ServletRegistrationBean monetaTopicListServlet() {
-	    ServletRegistrationBean registration = 
-	    		new ServletRegistrationBean(new MonetaTopicListServlet(), 
-	    				"/moneta/topics/*"); 
-	    return registration;
-	}
-	
-	/*
-	 * Withdrawn after issue discovered with jetty
-	 */
-//	@Bean
-//	public ServletRegistrationBean threadStartupServlet() {
-//	    ServletRegistrationBean registration = 
-//	    		new ServletRegistrationBean(new ThreadMonitorStartupServlet(), "/admin4j/threads"); 
-//	    registration.setLoadOnStartup(1);
-//	    return registration;
-//	}
-	
+
 	@Bean
 	public ServletRegistrationBean memoryMonitorStartupServlet() {
-	    ServletRegistrationBean registration = 
-	    		new ServletRegistrationBean(new MemoryMonitorStartupServlet(), "/admin4j/memory"); 
-	    registration.setLoadOnStartup(1);
-	    return registration;
+		ServletRegistrationBean registration =
+				new ServletRegistrationBean(new MemoryMonitorStartupServlet(), "/admin4j/memory");
+		registration.setLoadOnStartup(1);
+		return registration;
 	}
-	
+
 	@Bean
 	public FilterRegistrationBean monetaPerformanceFilter() {
-		FilterRegistrationBean registration = 
-				new FilterRegistrationBean(new MonetaPerformanceFilter(), 
+		FilterRegistrationBean registration =
+				new FilterRegistrationBean(new MonetaPerformanceFilter(),
 						monetaServlet(), monetaTopicListServlet());
 		return registration;
 	}
-	
+
+	/*
+	 * Withdrawn after issue discovered with jetty
+	 */
+	//	@Bean
+	//	public ServletRegistrationBean threadStartupServlet() {
+	//	    ServletRegistrationBean registration =
+	//	    		new ServletRegistrationBean(new ThreadMonitorStartupServlet(), "/admin4j/threads");
+	//	    registration.setLoadOnStartup(1);
+	//	    return registration;
+	//	}
+
+	@Bean
+	public ServletRegistrationBean monetaServlet() {
+		ServletRegistrationBean registration =
+				new ServletRegistrationBean(new MonetaServlet(),
+						"/moneta/topic/*");
+		registration.addInitParameter(
+				MonetaServlet.CONFIG_IGNORED_CONTEXT_PATH_NODES, "moneta,topic");
+		return registration;
+	}
+
+	@Bean
+	public ServletRegistrationBean monetaTopicListServlet() {
+		ServletRegistrationBean registration =
+				new ServletRegistrationBean(new MonetaTopicListServlet(),
+						"/moneta/topics/*");
+		return registration;
+	}
+
 	@Bean
 	public FilterRegistrationBean reportCorrelationFilter() {
-		FilterRegistrationBean registration = 
-				new FilterRegistrationBean(new RequestCorrelationFilter(), 
+		FilterRegistrationBean registration =
+				new FilterRegistrationBean(new RequestCorrelationFilter(),
 						monetaServlet(), monetaTopicListServlet());
 		return registration;
 	}
