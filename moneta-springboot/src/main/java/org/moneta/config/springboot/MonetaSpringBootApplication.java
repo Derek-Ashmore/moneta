@@ -15,16 +15,23 @@ package org.moneta.config.springboot;
 
 import net.admin4j.ui.servlets.MemoryMonitorStartupServlet;
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.force66.correlate.RequestCorrelationFilter;
 import org.moneta.MonetaPerformanceFilter;
 import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
 import org.moneta.config.MonetaEnvironment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.jetty.JettyServerCustomizer;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -42,6 +49,7 @@ import com.codahale.metrics.health.HealthCheckRegistry;
  */
 @Configuration
 @EnableAutoConfiguration
+@ConfigurationProperties
 @ComponentScan("org.moneta")
 @Component
 public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
@@ -54,16 +62,30 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 
 		// Install all health checks
 		HealthCheckRegistry registry = new HealthCheckRegistry();
-		for (String checkName: MonetaEnvironment.getConfiguration().getHealthChecks().keySet()) {
-			registry.register(checkName, MonetaEnvironment.getConfiguration().getHealthChecks().get(checkName));
+		for (String checkName : MonetaEnvironment.getConfiguration()
+				.getHealthChecks()
+				.keySet()) {
+			registry.register(checkName, MonetaEnvironment.getConfiguration()
+					.getHealthChecks()
+					.get(checkName));
 		}
 		ActuatorHealthIndicator.setHealthCheckRegistry(registry);
 
 		// Install metrics and JMX
 		MetricRegistry metricRegistry = new MetricRegistry();
-		final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
+		final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry)
+				.build();
 		jmxReporter.start();
 	}
+
+	@Value("${moneta.server.max.threads}")
+	private Integer serverMaxThreads;
+
+	@Value("${moneta.server.min.threads}")
+	private Integer serverMinThreads;
+
+	@Value("${moneta.server.idle.timeout}")
+	private Integer serverIdleTimeout;
 
 	@Bean
 	public ServletRegistrationBean memoryMonitorStartupServlet() {
@@ -116,6 +138,22 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 				new FilterRegistrationBean(new RequestCorrelationFilter(),
 						monetaServlet(), monetaTopicListServlet());
 		return registration;
+	}
+
+	@Bean
+	public EmbeddedServletContainerFactory servletContainer() {
+		JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
+		factory.addServerCustomizers(new JettyServerCustomizer() {
+			public void customize(final Server server) {
+				// Tweak the connection pool used by Jetty to handle incoming
+				// HTTP connections
+				final QueuedThreadPool threadPool = server.getBean(QueuedThreadPool.class);
+				threadPool.setMaxThreads(Integer.valueOf(serverMaxThreads));
+				threadPool.setMinThreads(Integer.valueOf(serverMinThreads));
+				threadPool.setIdleTimeout(Integer.valueOf(serverIdleTimeout));
+			}
+		});
+		return factory;
 	}
 
 }

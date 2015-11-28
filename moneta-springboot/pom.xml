@@ -106,36 +106,33 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<!--  
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<configuration>
-							<tasks>
-								<property environment="env" />
-								<mkdir dir="target/docker" />
-								<copy file="docker/Dockerfile-template"
-									tofile="target/docker/Dockerfile" />
-								<replace
-									file="target/docker/Dockerfile">
-									<replacefilter>
-										<replacetoken>#{project.version}</replacetoken>
-										<replacevalue>${project.version}</replacevalue>
-									</replacefilter>
-								</replace>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.3.6</version>
+				<configuration>
+					<imageName>example</imageName>
+					<baseImage>java</baseImage>
+					<entryPoint>["java", "-jar", "/target/moneta-springboot-${project.version}.jar"]</entryPoint>
+					<!-- copy the service's jar file from target into the root directory 
+						of the image -->
+					<resources>
+						<resource>
+							<!--  <targetPath>/</targetPath> -->
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
 			</plugin>
-			-->
+
+			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <version>1.7</version> 
+				<executions> <execution> <phase>install</phase> <configuration> <tasks> <property 
+				environment="env" /> <mkdir dir="target/docker" /> <copy file="docker/Dockerfile-template" 
+				tofile="target/docker/Dockerfile" /> <replace file="target/docker/Dockerfile"> 
+				<replacefilter> <replacetoken>#{project.version}</replacetoken> <replacevalue>${project.version}</replacevalue> 
+				</replacefilter> </replace> </tasks> </configuration> <goals> <goal>run</goal> 
+				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 
