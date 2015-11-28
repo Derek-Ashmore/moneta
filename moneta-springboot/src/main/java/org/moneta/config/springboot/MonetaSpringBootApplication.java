@@ -23,6 +23,8 @@ import org.moneta.MonetaServlet;
 import org.moneta.MonetaTopicListServlet;
 import org.moneta.config.MonetaConfiguration;
 import org.moneta.config.MonetaEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -53,6 +55,12 @@ import com.codahale.metrics.health.HealthCheckRegistry;
 @ComponentScan("org.moneta")
 @Component
 public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
+
+	public static final Integer DEFAULT_SERVER_MAX_THREADS = 20;
+	public static final Integer DEFAULT_SERVER_MIN_THREADS = 2;
+	public static final Integer DEFAULT_SERVER_IDLE_TIMEOUT = 30;
+
+	private static Logger logger = LoggerFactory.getLogger(MonetaSpringBootApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(MonetaSpringBootApplication.class, args);
@@ -87,19 +95,18 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	@Value("${moneta.server.idle.timeout}")
 	private Integer serverIdleTimeout;
 
+	protected Integer deriveValue(Integer configuredValue, Integer defaultValue) {
+		if (configuredValue == null) {
+			return defaultValue;
+		}
+		return configuredValue;
+	}
+
 	@Bean
 	public ServletRegistrationBean memoryMonitorStartupServlet() {
 		ServletRegistrationBean registration =
 				new ServletRegistrationBean(new MemoryMonitorStartupServlet(), "/admin4j/memory");
 		registration.setLoadOnStartup(1);
-		return registration;
-	}
-
-	@Bean
-	public FilterRegistrationBean monetaPerformanceFilter() {
-		FilterRegistrationBean registration =
-				new FilterRegistrationBean(new MonetaPerformanceFilter(),
-						monetaServlet(), monetaTopicListServlet());
 		return registration;
 	}
 
@@ -113,6 +120,14 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	//	    registration.setLoadOnStartup(1);
 	//	    return registration;
 	//	}
+
+	@Bean
+	public FilterRegistrationBean monetaPerformanceFilter() {
+		FilterRegistrationBean registration =
+				new FilterRegistrationBean(new MonetaPerformanceFilter(),
+						monetaServlet(), monetaTopicListServlet());
+		return registration;
+	}
 
 	@Bean
 	public ServletRegistrationBean monetaServlet() {
@@ -143,14 +158,26 @@ public class MonetaSpringBootApplication extends SpringBootServletInitializer  {
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 		JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
+
 		factory.addServerCustomizers(new JettyServerCustomizer() {
 			public void customize(final Server server) {
 				// Tweak the connection pool used by Jetty to handle incoming
 				// HTTP connections
+				Integer localServerMaxThreads = deriveValue(serverMaxThreads,
+						DEFAULT_SERVER_MAX_THREADS);
+				Integer localServerMinThreads = deriveValue(serverMinThreads,
+						DEFAULT_SERVER_MIN_THREADS);
+				Integer localServerIdleTimeout = deriveValue(serverIdleTimeout,
+						DEFAULT_SERVER_IDLE_TIMEOUT);
+
+				logger.info("Container Max Threads={}", localServerMaxThreads);
+				logger.info("Container Min Threads={}", localServerMinThreads);
+				logger.info("Container Idle Timeout={}", localServerIdleTimeout);
+
 				final QueuedThreadPool threadPool = server.getBean(QueuedThreadPool.class);
-				threadPool.setMaxThreads(Integer.valueOf(serverMaxThreads));
-				threadPool.setMinThreads(Integer.valueOf(serverMinThreads));
-				threadPool.setIdleTimeout(Integer.valueOf(serverIdleTimeout));
+				threadPool.setMaxThreads(Integer.valueOf(localServerMaxThreads));
+				threadPool.setMinThreads(Integer.valueOf(localServerMinThreads));
+				threadPool.setIdleTimeout(Integer.valueOf(localServerIdleTimeout));
 			}
 		});
 		return factory;
