@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>moneta-dropwizard</artifactId>
 	<properties>
-		<dropwizard.version>0.8.0-rc2</dropwizard.version>
+		<dropwizard.version>0.9.1</dropwizard.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -19,6 +19,11 @@
 		<dependency>
 			<groupId>io.dropwizard</groupId>
 			<artifactId>dropwizard-configuration</artifactId>
+			<version>${dropwizard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-db</artifactId>
 			<version>${dropwizard.version}</version>
 		</dependency>
 		<dependency>
