@@ -29,9 +29,6 @@ VOLUME /jarlib
 VOLUME /config
 VOLUME /logs
 
-# ENV MONETA_URL https://github.com/Derek-Ashmore/moneta/releases/download/moneta-#{project.version}/moneta-springboot-#{project.version}.jar
-# RUN curl -SL "$MONETA_URL" -o moneta-springboot.jar
-
 ENV CLASSPATH /config:/jarlib/*.jar:moneta-springboot.jar
 
 EXPOSE 8080
