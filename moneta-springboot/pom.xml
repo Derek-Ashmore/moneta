@@ -106,35 +106,88 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.3.6</version>
-				<configuration>
-					<imageName>example</imageName>
-					<baseImage>java</baseImage>
-					<entryPoint>["java", "-jar", "/target/moneta-springboot-${project.version}.jar"]</entryPoint>
-					<!-- copy the service's jar file from target into the root directory 
-						of the image -->
-					<resources>
-						<resource>
-							<!--  <targetPath>/</targetPath> -->
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>
 
-			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <version>1.7</version> 
-				<executions> <execution> <phase>install</phase> <configuration> <tasks> <property 
-				environment="env" /> <mkdir dir="target/docker" /> <copy file="docker/Dockerfile-template" 
-				tofile="target/docker/Dockerfile" /> <replace file="target/docker/Dockerfile"> 
-				<replacefilter> <replacetoken>#{project.version}</replacetoken> <replacevalue>${project.version}</replacevalue> 
-				</replacefilter> </replace> </tasks> </configuration> <goals> <goal>run</goal> 
-				</goals> </execution> </executions> </plugin> -->
+
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>Docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<configuration>
+										<tasks>
+											<copy file="${project.build.directory}/moneta-springboot-${project.version}.jar" 
+												tofile="${project.build.directory}/moneta-springboot.jar"/>
+										</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>1.4.1</version>
+						<executions>
+							<execution>
+								<id>enforce-environment-variable-is-set</id>
+								<phase>install</phase>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireEnvironmentVariable>
+											<variableName>DOCKER_HOST</variableName>
+										</requireEnvironmentVariable>
+										<requireEnvironmentVariable>
+											<variableName>DOCKER_CERT_PATH</variableName>
+										</requireEnvironmentVariable>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.3.258</version>
+						<configuration>
+							<imageName>moneta-springboot-${project.version}</imageName>
+							<dockerDirectory>docker</dockerDirectory>
+							<resources>
+								<resource>
+									<!-- <targetPath>/</targetPath> -->
+									<directory>${project.build.directory}</directory>
+									<include>moneta-springboot.jar</include>
+								</resource>
+							</resources>
+						</configuration>
+						<executions>
+							<execution>
+								<id>build-image</id>
+								<phase>install</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<properties>
 		<java.version>1.7</java.version>
