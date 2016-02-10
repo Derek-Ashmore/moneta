@@ -25,11 +25,11 @@ FROM java:7-jre
 MAINTAINER Derek C. Ashmore
 
 #  External volume definitions
-VOLUME /jarlib
+COPY moneta-springboot.jar /
 VOLUME /config
 VOLUME /logs
 
-ENV CLASSPATH /config:/jarlib/*.jar:moneta-springboot.jar
+ENV CLASSPATH moneta-springboot.jar
 
 EXPOSE 8080
 
