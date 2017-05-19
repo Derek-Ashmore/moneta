@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.force66</groupId>
 		<artifactId>moneta</artifactId>
-		<version>${project.version}</version>
+		<version>0.9.3-alpha</version>
 	</parent>
 	<artifactId>moneta-dropwizard</artifactId>
 	<properties>

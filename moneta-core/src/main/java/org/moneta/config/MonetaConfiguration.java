@@ -111,7 +111,7 @@ public class MonetaConfiguration {
 	
 	/**
 	 * Will initialize Moneta given a configuration.  This <b>must</b> be executed before use.
-	 * @param config
+	 * @param config XML configuration
 	 */
 	protected final void init(XMLConfiguration config) {
 				
@@ -289,8 +289,8 @@ public class MonetaConfiguration {
 	
 	/**
 	 * Will return a dbConnection for a given information topic.
-	 * @param sourceName
-	 * @return topicDbConnection
+	 * @param sourceName Data source name
+	 * @return topicDbConnection connection topic
 	 */
 	public Connection getConnection(String sourceName) {
 		Validate.notEmpty(sourceName, "Null or blank sourceName not allowed");

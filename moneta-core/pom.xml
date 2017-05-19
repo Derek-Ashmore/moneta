@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.force66</groupId>
 		<artifactId>moneta</artifactId>
-		<version>0.9.2-alpha</version>
+		<version>0.9.3-alpha</version>
 	</parent>
 	<artifactId>moneta-core</artifactId>
 	<dependencies>
@@ -261,5 +261,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<version>0.9.2-alpha</version>
 </project>

@@ -24,9 +24,9 @@ import com.codahale.metrics.health.HealthCheck;
 
 /**
  * Will check the health of a database connection pool managed by Apache Commons
- * DBCP. Items checked are the following: <li>The number of threads waiting for
- * a connection isn't larger than a configurable threashold (default=3)</li> <li>
- * A connection from the pool does sucessfully validate.</li>
+ * DBCP. Items checked are the following: 
+ * <li>The number of threads waiting for a connection isn't larger than a configurable threashold (default=3)</li> 
+ * <li> A connection from the pool does sucessfully validate.</li>
  * 
  * @author D. Ashmore
  *

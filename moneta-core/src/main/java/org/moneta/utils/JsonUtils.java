@@ -27,8 +27,6 @@ public class JsonUtils {
 	
 	/**
 	 * Will convert the given object to Json format.
-	 * @param jsonObject
-	 * @return jsonText
 	 */
 	public static String serialize(Object jsonObject) {
 		Validate.notNull(jsonObject, "Null object cannot be converted to Json");
